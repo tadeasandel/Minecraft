@@ -56,5 +56,9 @@ public class ObjectInteractionController : MonoBehaviour
     {
       target.targetCube.VisualizeBlock(target.sideTag);
     }
+    else
+    {
+      Gizmos.DrawCube(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    }
   }
 }

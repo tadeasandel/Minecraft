@@ -590,34 +590,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 705428037, guid: f7d0d76d614afd74a93a271342029475, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 705428037, guid: f7d0d76d614afd74a93a271342029475, type: 3}
+      propertyPath: gravity
+      value: -39.24
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7d0d76d614afd74a93a271342029475, type: 3}
---- !u!1 &971771849 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7860629156409474659, guid: f7d0d76d614afd74a93a271342029475,
-    type: 3}
-  m_PrefabInstance: {fileID: 971771848}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &971771850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 971771849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86ff39f1425bc7b4aacf96c8bcad2d3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxDistance: 10
-  tags:
-  - FrontBlock
-  - BackBlock
-  - LeftBlock
-  - RightBlock
-  - TopBlock
-  - DownBlock
 --- !u!1 &1630732012
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +642,7 @@ GameObject:
   - component: {fileID: 1724252685}
   - component: {fileID: 1724252684}
   - component: {fileID: 1724252683}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -807,106 +789,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[0].x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[0].y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[0].z
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[1].x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[1].y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[1].z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[2].x
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[2].y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[2].z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[3].x
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[3].y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[3].z
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[4].y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[5].y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[6].y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[7].y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[4].x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[4].z
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[5].x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[6].x
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[7].x
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[5].z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[6].z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-      propertyPath: verticles.Array.data[7].z
-      value: -0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}

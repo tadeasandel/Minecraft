@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4593941707199227761}
   - component: {fileID: 4593941707199227766}
   - component: {fileID: 4593941707199227767}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Back
   m_TagString: BackBlock
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 4593941707324809103}
   - component: {fileID: 4593941707324809100}
   - component: {fileID: 4593941707324809101}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Left
   m_TagString: LeftBlock
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4593941707474946971}
   - component: {fileID: 491337630}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,66 +328,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16a1a719f531d1741ba06043c0147f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontTransform: {fileID: 4593941707081205810}
-  backTransform: {fileID: 4593941707199227764}
-  leftTransform: {fileID: 4593941707324809090}
-  rightTransform: {fileID: 4593941707901885226}
-  topTransform: {fileID: 4593941708572148126}
-  downTransform: {fileID: 4593941708791977089}
-  frontTransformPoints:
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 1}
-  - {x: -0.5, y: 0.5, z: 1}
-  - {x: -0.5, y: 0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: -0.5, z: 1}
-  - {x: -0.5, y: -0.5, z: 1}
-  - {x: -0.5, y: -0.5, z: 0}
-  backTransformPoints:
-  - {x: 0.5, y: 0.5, z: -1}
-  - {x: 0.5, y: 0.5, z: 0}
-  - {x: -0.5, y: 0.5, z: 0}
-  - {x: -0.5, y: 0.5, z: -1}
-  - {x: 0.5, y: -0.5, z: -1}
-  - {x: 0.5, y: -0.5, z: 0}
-  - {x: -0.5, y: -0.5, z: 0}
-  - {x: -0.5, y: -0.5, z: -1}
-  leftTransformPoints:
-  - {x: 0, y: 0.5, z: -0.5}
-  - {x: 0, y: 0.5, z: 0.5}
-  - {x: -1, y: 0.5, z: 0.5}
-  - {x: -1, y: 0.5, z: -0.5}
-  - {x: 0, y: -0.5, z: -0.5}
-  - {x: 0, y: -0.5, z: 0.5}
-  - {x: -1, y: -0.5, z: 0.5}
-  - {x: -1, y: -0.5, z: -0.5}
-  rightTransformPoints:
-  - {x: 0, y: 0.5, z: -0.5}
-  - {x: 0, y: 0.5, z: 0.5}
-  - {x: 1, y: 0.5, z: 0.5}
-  - {x: 1, y: 0.5, z: -0.5}
-  - {x: 0, y: -0.5, z: -0.5}
-  - {x: 0, y: -0.5, z: 0.5}
-  - {x: 1, y: -0.5, z: 0.5}
-  - {x: 1, y: -0.5, z: -0.5}
-  topTransformPoints:
-  - {x: 0.5, y: 1, z: -0.5}
-  - {x: 0.5, y: 1, z: 0.5}
-  - {x: -0.5, y: 1, z: 0.5}
-  - {x: -0.5, y: 1, z: -0.5}
-  - {x: 0.5, y: 0, z: -0.5}
-  - {x: 0.5, y: 0, z: 0.5}
-  - {x: -0.5, y: 0, z: 0.5}
-  - {x: -0.5, y: 0, z: -0.5}
-  downTransformPoints:
-  - {x: 0.5, y: 0, z: -0.5}
-  - {x: 0.5, y: 0, z: 0.5}
-  - {x: -0.5, y: 0, z: 0.5}
-  - {x: -0.5, y: 0, z: -0.5}
-  - {x: 0.5, y: -1, z: -0.5}
-  - {x: 0.5, y: -1, z: 0.5}
-  - {x: -0.5, y: -1, z: 0.5}
-  - {x: -0.5, y: -1, z: -0.5}
+  verticles:
+  - {x: 0.5, y: 0.5, z: -0.5}
+  - {x: 0.5, y: 0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: -0.5}
+  - {x: 0.5, y: -0.5, z: -0.5}
+  - {x: 0.5, y: -0.5, z: 0.5}
+  - {x: -0.5, y: -0.5, z: 0.5}
+  - {x: -0.5, y: -0.5, z: -0.5}
 --- !u!1 &4593941707901885227
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +349,7 @@ GameObject:
   - component: {fileID: 4593941707901885239}
   - component: {fileID: 4593941707901885236}
   - component: {fileID: 4593941707901885237}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Right
   m_TagString: RightBlock
   m_Icon: {fileID: 0}
@@ -493,7 +442,7 @@ GameObject:
   - component: {fileID: 4593941708572148123}
   - component: {fileID: 4593941708572148120}
   - component: {fileID: 4593941708572148121}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Top
   m_TagString: TopBlock
   m_Icon: {fileID: 0}
@@ -586,7 +535,7 @@ GameObject:
   - component: {fileID: 4593941708791977090}
   - component: {fileID: 4593941708791977091}
   - component: {fileID: 4593941708791977088}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: Down
   m_TagString: DownBlock
   m_Icon: {fileID: 0}
