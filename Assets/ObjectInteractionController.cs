@@ -39,9 +39,17 @@ public class ObjectInteractionController : MonoBehaviour
           if (isInConstrutorMode)
           {
             VisualizeGrid(hit);
+            if (Input.GetButtonDown("Fire1"))
+            {
+              target.targetCube.CreateBlock(target.sideTag);
+            }
           }
         }
       }
+    }
+    else
+    {
+      target.targetCube = null;
     }
   }
 
