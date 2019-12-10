@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 4593941707474946971}
   - component: {fileID: 491337630}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: Basic Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -328,6 +328,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16a1a719f531d1741ba06043c0147f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontTransform: {fileID: 0}
+  backTransform: {fileID: 0}
+  leftTransform: {fileID: 0}
+  rightTransform: {fileID: 0}
+  topTransform: {fileID: 0}
+  downTransform: {fileID: 0}
   verticles:
   - {x: 0.5, y: 0.5, z: -0.5}
   - {x: 0.5, y: 0.5, z: 0.5}
@@ -337,6 +343,8 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0.5}
   - {x: -0.5, y: -0.5, z: 0.5}
   - {x: -0.5, y: -0.5, z: -0.5}
+  gridSize: 1
+  cubeType: {fileID: 0}
 --- !u!1 &4593941707901885227
 GameObject:
   m_ObjectHideFlags: 0

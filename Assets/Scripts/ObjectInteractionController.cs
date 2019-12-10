@@ -12,10 +12,17 @@ public class ObjectInteractionController : MonoBehaviour
 
   bool isInConstrutorMode = true;
 
+  ItemTargetSwitcher itemTargetSwitcher;
+
   struct Target
   {
     public CubeEditor targetCube;
     public string sideTag;
+  }
+
+  private void Start()
+  {
+    itemTargetSwitcher = FindObjectOfType<ItemTargetSwitcher>();
   }
 
   Target target;
@@ -23,6 +30,11 @@ public class ObjectInteractionController : MonoBehaviour
   void Update()
   {
     ProcessRaycast();
+  }
+
+  public void EnableMode()
+  {
+
   }
 
   private void ProcessRaycast()
@@ -41,7 +53,7 @@ public class ObjectInteractionController : MonoBehaviour
             VisualizeGrid(hit);
             if (Input.GetButtonDown("Fire1"))
             {
-              target.targetCube.CreateBlock(target.sideTag);
+              target.targetCube.CreateBlock(target.sideTag, itemTargetSwitcher.GetCubeType());
             }
           }
         }
