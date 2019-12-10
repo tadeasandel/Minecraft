@@ -12,6 +12,7 @@ public class ItemManager : MonoBehaviour
   bool hasItemToPlace = true;
 
   [SerializeField] CubeType currentCubeType;
+  [SerializeField] ToolType currentToolType;
 
   private void Update()
   {
@@ -24,6 +25,7 @@ public class ItemManager : MonoBehaviour
   public void SetItemActive()
   {
     RecolorImages(activeColor);
+    FindObjectOfType<ObjectInteractionController>().EnableMode(currentToolType);
   }
 
   public void SetItemInactive()

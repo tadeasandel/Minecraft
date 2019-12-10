@@ -92,6 +92,7 @@ public class CubeEditor : MonoBehaviour
 
   public void DestroyBlock()
   {
-    Destroy(this);
+    print(gameObject.name);
+    Destroy(gameObject);
   }
 }

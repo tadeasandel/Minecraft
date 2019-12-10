@@ -713,6 +713,10 @@ PrefabInstance:
       propertyPath: gravity
       value: -39.24
       objectReference: {fileID: 0}
+    - target: {fileID: 971771850, guid: f7d0d76d614afd74a93a271342029475, type: 3}
+      propertyPath: blockPlaceTimer
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7d0d76d614afd74a93a271342029475, type: 3}
 --- !u!1 &971771849 stripped
