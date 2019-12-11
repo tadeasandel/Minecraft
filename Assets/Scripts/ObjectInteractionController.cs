@@ -126,13 +126,10 @@ public class ObjectInteractionController : MonoBehaviour
     {
       if (currentObjectName == null)
       {
-        print("first object name initialized");
         currentObjectName = hit.transform.name;
       }
       if (currentObjectName != hit.transform.parent.name)
       {
-        print(target.targetCube.name + " and " + hit.transform.parent.name);
-        print("different names - reseting mining");
         miningTime = 0;
       }
       currentObjectName = hit.transform.parent.name;

@@ -19,6 +19,7 @@ public class CubeEditor : MonoBehaviour
   private void Start()
   {
     SetOffset();
+    SetCubeType(currentCubeType);
   }
 
   private void SetOffset()
