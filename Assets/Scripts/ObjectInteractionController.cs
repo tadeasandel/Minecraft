@@ -19,6 +19,8 @@ public class ObjectInteractionController : MonoBehaviour
 
   CubeType currentCubeType;
 
+  string currentObjectName;
+
   float timeSinceDestroyedBlock = Mathf.Infinity;
   [SerializeField] float blockDestroyTimer = 0.3f;
 
@@ -122,6 +124,18 @@ public class ObjectInteractionController : MonoBehaviour
   {
     if (Input.GetButton("Fire1") && blockDestroyTimer < timeSinceDestroyedBlock)
     {
+      if (currentObjectName == null)
+      {
+        print("first object name initialized");
+        currentObjectName = hit.transform.name;
+      }
+      if (currentObjectName != hit.transform.parent.name)
+      {
+        print(target.targetCube.name + " and " + hit.transform.parent.name);
+        print("different names - reseting mining");
+        miningTime = 0;
+      }
+      currentObjectName = hit.transform.parent.name;
       miningCalculation = currentToolType.miningSpeed / target.targetCube.GetCubeType().toughness;
       miningTime += Time.deltaTime;
       if (miningCalculation <= miningTime)
@@ -130,6 +144,10 @@ public class ObjectInteractionController : MonoBehaviour
         timeSinceDestroyedBlock = 0;
         target.targetCube.DestroyBlock();
       }
+    }
+    else
+    {
+      miningTime = 0;
     }
   }
 
