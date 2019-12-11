@@ -25,7 +25,7 @@ public class ItemManager : MonoBehaviour
   public void SetItemActive()
   {
     RecolorImages(activeColor);
-    FindObjectOfType<ObjectInteractionController>().EnableMode(currentToolType);
+    FindObjectOfType<ObjectInteractionController>().EnableMode(currentToolType, currentCubeType);
   }
 
   public void SetItemInactive()

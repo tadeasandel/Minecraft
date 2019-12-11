@@ -15,10 +15,22 @@ public class ObjectInteractionController : MonoBehaviour
   ItemTargetSwitcher itemTargetSwitcher;
 
   ToolType currentToolType;
-  ToolType defaultToolType;
+  [SerializeField] ToolType defaultToolType;
+
+  CubeType currentCubeType;
+
+  float timeSinceDestroyedBlock = Mathf.Infinity;
+  [SerializeField] float blockDestroyTimer = 0.3f;
 
   float timeSincePlacedBlock = Mathf.Infinity;
   [SerializeField] float blockPlaceTimer = 0.3f;
+
+  float cubeToughness;
+
+  bool isDigging = false;
+
+  float miningCalculation;
+  float miningTime;
 
   struct Target
   {
@@ -35,24 +47,42 @@ public class ObjectInteractionController : MonoBehaviour
 
   void Update()
   {
-    if (currentToolType != null)
+    ProcessRaycast();
+    UpdateTimers();
+  }
+
+  private void UpdateTimers()
+  {
+    timeSincePlacedBlock += Time.deltaTime;
+    timeSinceDestroyedBlock += Time.deltaTime;
+  }
+
+  public void EnableMode(ToolType toolType, CubeType cubeType)
+  {
+    ActivateCubeType(cubeType);
+    ActiveToolType(toolType);
+  }
+
+  private void ActiveToolType(ToolType toolType)
+  {
+    if (toolType == null)
     {
-      isInConstrutorMode = false;
+      currentToolType = defaultToolType;
+      return;
+    }
+    currentToolType = toolType;
+  }
+
+  private void ActivateCubeType(CubeType cubeType)
+  {
+    currentCubeType = cubeType;
+    if (currentCubeType != null)
+    {
+      isInConstrutorMode = true;
     }
     else
     {
-      isInConstrutorMode = true;
-      currentToolType = defaultToolType;
-    }
-    ProcessRaycast();
-    timeSincePlacedBlock += Time.deltaTime;
-  }
-
-  public void EnableMode(ToolType toolType)
-  {
-    if (toolType != null)
-    {
-      currentToolType = toolType;
+      isInConstrutorMode = false;
     }
   }
 
@@ -66,6 +96,7 @@ public class ObjectInteractionController : MonoBehaviour
     else
     {
       target.targetCube = null;
+      miningTime = 0;
     }
   }
 
@@ -89,9 +120,16 @@ public class ObjectInteractionController : MonoBehaviour
 
   private void ProcessMining(RaycastHit hit)
   {
-    if (Input.GetButton("Fire1"))
+    if (Input.GetButton("Fire1") && blockDestroyTimer < timeSinceDestroyedBlock)
     {
-      target.targetCube.DestroyBlock();
+      miningCalculation = currentToolType.miningSpeed / target.targetCube.GetCubeType().toughness;
+      miningTime += Time.deltaTime;
+      if (miningCalculation <= miningTime)
+      {
+        miningTime = 0;
+        timeSinceDestroyedBlock = 0;
+        target.targetCube.DestroyBlock();
+      }
     }
   }
 

@@ -31,6 +31,11 @@ public class CubeEditor : MonoBehaviour
     sideOffset.Add("DownBlock", new Vector3(0f, -1f, 0f));
   }
 
+  public CubeType GetCubeType()
+  {
+    return currentCubeType;
+  }
+
   public void SetCubeType(CubeType cubeType)
   {
     if (cubeType == null) { return; }
@@ -92,7 +97,6 @@ public class CubeEditor : MonoBehaviour
 
   public void DestroyBlock()
   {
-    print(gameObject.name);
     Destroy(gameObject);
   }
 }

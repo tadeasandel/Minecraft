@@ -116,13 +116,13 @@ MonoBehaviour:
   speed: 0
   normalSpeed: 7
   runSpeed: 10
-  gravity: -9.81
+  gravity: -39.24
   jumpHeight: 3
   groundCheck: {fileID: 7860629156379842913}
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   doubleMoveReduction: 1.7
   x: 0
   z: 0
@@ -147,6 +147,8 @@ MonoBehaviour:
   - RightBlock
   - TopBlock
   - DownBlock
+  blockDestroyTimer: 0.3
+  blockPlaceTimer: 0.3
 --- !u!1 &7860629157314759626
 GameObject:
   m_ObjectHideFlags: 0
