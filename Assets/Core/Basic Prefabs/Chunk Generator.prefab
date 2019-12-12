@@ -43,7 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2251b2c8ce557a41b5ba7d28923af34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkDistance: 64
-  chunkHeight: 64
-  chunkWidth: 64
-  chunkDepth: 20
+  chunkHeight: 20
+  chunkWidth: 20
+  chunkDepth: 1
+  basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
+  offset: {x: -10, y: 0, z: -10}

@@ -26,8 +26,23 @@ public class WorldManager : MonoBehaviour
       print(newChunkLocation);
       string newChunkName = newChunkLocation.x + "," + newChunkLocation.z;
       ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, newChunkLocation, Quaternion.identity, transform);
+      if (chunkTable.ContainsKey(newChunkName))
+      {
+        continue;
+      }
       chunkTable.Add(newChunkName, newChunk);
-      print("creating chunk ");
+    }
+  }
+
+  public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
+  {
+    if (chunkTable.ContainsKey(chunkGenerator.name))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
     }
   }
 }
