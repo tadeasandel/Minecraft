@@ -44,4 +44,18 @@ public class WorldManager : MonoBehaviour
       return false;
     }
   }
+
+  public bool GetChunkGeneratorByIndex(string chunkGeneratorName)
+  {
+    if (chunkTable.ContainsKey(chunkGeneratorName))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  
 }

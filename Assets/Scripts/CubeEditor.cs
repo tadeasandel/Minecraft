@@ -32,7 +32,7 @@ public class CubeEditor : MonoBehaviour
     SnapToGridPosition();
     UpdateName();
     GiveInfoToParent();
-    ProcessNeightbours(true);
+    ProcessNeighbours(true);
   }
 
   private void GiveInfoToParent()
@@ -40,12 +40,16 @@ public class CubeEditor : MonoBehaviour
     cubeParent.AddNewCube(this);
   }
 
-  public void ProcessNeightbours(bool firstTime)
+  public void ProcessNeighbours(bool firstTime)
   {
     cubeParent = transform.GetComponentInParent<ChunkGenerator>();
     for (int i = 0; i < 6; i++)
     {
       Vector3 neighbourCube = transform.position + directions[i];
+      if (childTable.ContainsKey(directions[i]))
+      {
+        RevealTransform(childTable[directions[i]]);
+      }
       if (cubeParent.DoesHaveNeighbour(neighbourCube.ToString()))
       {
         if (childTable.ContainsKey(directions[i]))
@@ -54,9 +58,8 @@ public class CubeEditor : MonoBehaviour
         }
         if (firstTime)
         {
-          // CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
-
-          // cubeParent.WelcomeNeighbour(neighbourCube.ToString(), false);
+          CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
+          temporaryCubeEditor.ProcessNeighbours(false);
         }
       }
     }
@@ -69,7 +72,6 @@ public class CubeEditor : MonoBehaviour
 
   public void HideSideTransform(GameObject sideObject)
   {
-    print("hiding " + sideObject.name);
     sideObject.SetActive(false);
   }
 

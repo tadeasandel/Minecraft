@@ -17,12 +17,6 @@ public class ChunkGenerator : MonoBehaviour
 
   Dictionary<string, CubeEditor> cubeEditors = new Dictionary<string, CubeEditor>();
 
-  struct Cube
-  {
-    CubeEditor cubeEditor;
-    CubeType cubeType;
-  }
-
   public CubeEditor GetCubeEditorByIndex(string cubeEditorName)
   {
     return cubeEditors[cubeEditorName];
@@ -53,9 +47,13 @@ public class ChunkGenerator : MonoBehaviour
   {
     if (!cubeEditors.ContainsKey(cubeEditor.name))
     {
-      print("adding " + cubeEditor.name);
       cubeEditors.Add(cubeEditor.name, cubeEditor);
     }
+  }
+
+  public void RemoveCube(CubeEditor cubeEditor)
+  {
+    
   }
 
   private void GenerateChunk()
@@ -82,7 +80,7 @@ public class ChunkGenerator : MonoBehaviour
   {
     if (cubeEditors.ContainsKey(neighbourName))
     {
-      cubeEditors[neighbourName].ProcessNeightbours(firstTime);
+      cubeEditors[neighbourName].ProcessNeighbours(firstTime);
     }
   }
 
