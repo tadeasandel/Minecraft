@@ -53,7 +53,10 @@ public class ChunkGenerator : MonoBehaviour
 
   public void RemoveCube(CubeEditor cubeEditor)
   {
-    
+    if (cubeEditors.ContainsKey(cubeEditor.name))
+    {
+      cubeEditors.Remove(cubeEditor.name);
+    }
   }
 
   private void GenerateChunk()
@@ -86,7 +89,7 @@ public class ChunkGenerator : MonoBehaviour
 
   private void OnDrawGizmos()
   {
-    Gizmos.DrawWireCube(transform.position, new Vector3(chunkHeight - 0.5f, chunkDepth, chunkWidth - 0.5f));
+    Gizmos.DrawWireCube(transform.position, new Vector3(chunkHeight, chunkDepth, chunkWidth));
   }
 
   private void Update()

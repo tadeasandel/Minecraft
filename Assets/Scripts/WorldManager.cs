@@ -56,6 +56,4 @@ public class WorldManager : MonoBehaviour
       return false;
     }
   }
-
-  
 }

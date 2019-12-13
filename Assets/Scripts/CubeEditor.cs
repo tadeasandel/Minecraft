@@ -31,21 +31,26 @@ public class CubeEditor : MonoBehaviour
     ApplyCubeType();
     SnapToGridPosition();
     UpdateName();
-    GiveInfoToParent();
+    AddCubeToParent();
     ProcessNeighbours(true);
   }
 
-  private void GiveInfoToParent()
+  private void AddCubeToParent()
   {
     cubeParent.AddNewCube(this);
   }
 
+  private void RemoveCubeFromParent()
+  {
+    cubeParent.RemoveCube(this);
+  }
+
   public void ProcessNeighbours(bool firstTime)
   {
-    cubeParent = transform.GetComponentInParent<ChunkGenerator>();
     for (int i = 0; i < 6; i++)
     {
       Vector3 neighbourCube = transform.position + directions[i];
+      cubeParent = GetComponentInParent<ChunkGenerator>();
       if (childTable.ContainsKey(directions[i]))
       {
         RevealTransform(childTable[directions[i]]);
@@ -60,6 +65,23 @@ public class CubeEditor : MonoBehaviour
         {
           CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
           temporaryCubeEditor.ProcessNeighbours(false);
+        }
+      }
+    }
+  }
+
+  private void AdjustNeighbours()
+  {
+    for (int i = 0; i < 6; i++)
+    {
+      Vector3 neighbourCube = transform.position + directions[i];
+      cubeParent = GetComponentInParent<ChunkGenerator>();
+      if (cubeParent.DoesHaveNeighbour(neighbourCube.ToString()))
+      {
+        CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
+        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
+        {
+          temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
         }
       }
     }
@@ -110,12 +132,6 @@ public class CubeEditor : MonoBehaviour
     }
   }
 
-  private void Update()
-  {
-    SnapToGridPosition();
-    UpdateName();
-  }
-
   private void SnapToGridPosition()
   {
     transform.position = new Vector3(Mathf.RoundToInt(transform.position.x * gridSize), Mathf.RoundToInt(transform.position.y * gridSize), Mathf.RoundToInt(transform.position.z * gridSize));
@@ -158,6 +174,8 @@ public class CubeEditor : MonoBehaviour
 
   public void DestroyBlock()
   {
+    AdjustNeighbours();
+    RemoveCubeFromParent();
     Destroy(gameObject);
   }
 }
