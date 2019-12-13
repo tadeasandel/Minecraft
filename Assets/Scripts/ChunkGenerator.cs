@@ -23,12 +23,38 @@ public class ChunkGenerator : MonoBehaviour
     CubeType cubeType;
   }
 
+  public CubeEditor GetCubeEditorByIndex(string cubeEditorName)
+  {
+    return cubeEditors[cubeEditorName];
+  }
+
+  public bool DoesHaveNeighbour(string neighbourName)
+  {
+    if (cubeEditors.ContainsKey(neighbourName))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
   private void Start()
   {
     worldManager = FindObjectOfType<WorldManager>();
     if (!worldManager.IsChunkGenerated(this))
     {
       GenerateChunk();
+    }
+  }
+
+  public void AddNewCube(CubeEditor cubeEditor)
+  {
+    if (!cubeEditors.ContainsKey(cubeEditor.name))
+    {
+      print("adding " + cubeEditor.name);
+      cubeEditors.Add(cubeEditor.name, cubeEditor);
     }
   }
 
@@ -42,12 +68,21 @@ public class ChunkGenerator : MonoBehaviour
         {
           Vector3 newCubeLocation = transform.position + new Vector3((float)x, (float)y, (float)z) + offset;
           CubeEditor currentCubeEditor = Instantiate(basicCubePrefab, newCubeLocation, Quaternion.identity, transform);
-          if (cubeEditors.ContainsKey(currentCubeEditor.name))
+          currentCubeEditor.UpdateName();
+          if (!cubeEditors.ContainsKey(currentCubeEditor.name))
           {
-            cubeEditors.Add(currentCubeEditor.name, currentCubeEditor.GetComponent<CubeEditor>());
+            cubeEditors.Add(currentCubeEditor.name, currentCubeEditor);
           }
         }
       }
+    }
+  }
+
+  public void WelcomeNeighbour(string neighbourName, bool firstTime)
+  {
+    if (cubeEditors.ContainsKey(neighbourName))
+    {
+      cubeEditors[neighbourName].ProcessNeightbours(firstTime);
     }
   }
 

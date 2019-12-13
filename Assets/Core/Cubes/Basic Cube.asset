@@ -21,4 +21,3 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7f7cf718319da8347afe2747719e9b08, type: 2}
   - {fileID: 2100000, guid: 49d2f6850ba6ef3439e8ad0a72e85c2f, type: 2}
   - {fileID: 2100000, guid: 4b204db0d7be7a443ab58e362c5c60af, type: 2}
-  dropItem: {fileID: 0}

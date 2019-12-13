@@ -23,7 +23,6 @@ public class WorldManager : MonoBehaviour
     foreach (Vector3 chunkLocation in chunkLocations)
     {
       Vector3 newChunkLocation = transform.position + chunkLocation * chunkDistance;
-      print(newChunkLocation);
       string newChunkName = newChunkLocation.x + "," + newChunkLocation.z;
       ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, newChunkLocation, Quaternion.identity, transform);
       if (chunkTable.ContainsKey(newChunkName))

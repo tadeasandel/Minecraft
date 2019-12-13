@@ -7,6 +7,7 @@ using UnityEngine;
 public class CubeEditor : MonoBehaviour
 {
   Dictionary<string, Vector3> sideOffset = new Dictionary<string, Vector3>();
+  public Dictionary<Vector3, GameObject> childTable = new Dictionary<Vector3, GameObject>();
 
   [SerializeField] Vector3[] verticles;
 
@@ -14,12 +15,62 @@ public class CubeEditor : MonoBehaviour
 
   [SerializeField] CubeType currentCubeType;
 
+  ChunkGenerator cubeParent;
+
+  [SerializeField] GameObject cubePrefab;
+
   float toughness;
+
+  Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down };
 
   private void Start()
   {
+    cubeParent = GetComponentInParent<ChunkGenerator>();
     SetOffset();
     SetCubeType(currentCubeType);
+    ApplyCubeType();
+    SnapToGridPosition();
+    UpdateName();
+    GiveInfoToParent();
+    ProcessNeightbours(true);
+  }
+
+  private void GiveInfoToParent()
+  {
+    cubeParent.AddNewCube(this);
+  }
+
+  public void ProcessNeightbours(bool firstTime)
+  {
+    cubeParent = transform.GetComponentInParent<ChunkGenerator>();
+    for (int i = 0; i < 6; i++)
+    {
+      Vector3 neighbourCube = transform.position + directions[i];
+      if (cubeParent.DoesHaveNeighbour(neighbourCube.ToString()))
+      {
+        if (childTable.ContainsKey(directions[i]))
+        {
+          HideSideTransform(childTable[directions[i]]);
+        }
+        if (firstTime)
+        {
+          // CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
+
+          // cubeParent.WelcomeNeighbour(neighbourCube.ToString(), false);
+        }
+      }
+    }
+  }
+
+  private void RevealTransform(GameObject sideObject)
+  {
+    sideObject.SetActive(true);
+  }
+
+  public void HideSideTransform(GameObject sideObject)
+  {
+    print("hiding " + sideObject.name);
+    sideObject.SetActive(false);
   }
 
   private void SetOffset()
@@ -41,11 +92,19 @@ public class CubeEditor : MonoBehaviour
   {
     if (cubeType == null) { return; }
     currentCubeType = cubeType;
-    toughness = cubeType.toughness;
+  }
+
+  public void ApplyCubeType()
+  {
+    toughness = currentCubeType.toughness;
     for (int i = 0; i < 6; i++)
     {
-      if (cubeType.materials.Length != 6) { break; }
-      transform.GetChild(i).GetComponent<MeshRenderer>().material = cubeType.materials[i];
+      if (currentCubeType.materials.Length != 6) { break; }
+      transform.GetChild(i).GetComponent<MeshRenderer>().material = currentCubeType.materials[i];
+      if (!childTable.ContainsKey(directions[i]))
+      {
+        childTable.Add(directions[i], transform.GetChild(i).gameObject);
+      }
     }
   }
 
@@ -60,12 +119,11 @@ public class CubeEditor : MonoBehaviour
     transform.position = new Vector3(Mathf.RoundToInt(transform.position.x * gridSize), Mathf.RoundToInt(transform.position.y * gridSize), Mathf.RoundToInt(transform.position.z * gridSize));
   }
 
-  private void UpdateName()
+  public void UpdateName()
   {
-    string positionName = currentCubeType.cubeTypeName + " " + transform.position.x + "," + transform.position.y + "," + transform.position.z;
-    if (transform.name != positionName)
+    if (transform.name != transform.position.ToString())
     {
-      transform.name = positionName;
+      transform.name = transform.position.ToString();
     }
   }
 
@@ -92,8 +150,8 @@ public class CubeEditor : MonoBehaviour
 
   public void CreateBlock(string sideTag, CubeType cubeType)
   {
-    CubeEditor newCube = Instantiate(this, transform.position + sideOffset[sideTag], Quaternion.identity);
-    newCube.SetCubeType(cubeType);
+    GameObject newCube = Instantiate(cubePrefab, transform.position + sideOffset[sideTag], Quaternion.identity, cubeParent.transform);
+    newCube.GetComponent<CubeEditor>().SetCubeType(cubeType);
   }
 
   public void DestroyBlock()
