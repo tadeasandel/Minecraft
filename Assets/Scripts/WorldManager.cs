@@ -9,33 +9,43 @@ public class WorldManager : MonoBehaviour
 
   [SerializeField] float chunkDistance;
 
-  Dictionary<string, ChunkGenerator> chunkTable = new Dictionary<string, ChunkGenerator>();
+  Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
 
-  [SerializeField] Vector3[] chunkLocations;
+  [SerializeField] Vector3[] chunkOffsets;
+
+  public struct ChunkPerlinOffsets
+  {
+    public float chunkOffsetX;
+    public float chunkOffsetZ;
+  }
+
+  public ChunkPerlinOffsets chunkPerlinOffsets;
 
   private void Start()
   {
+    chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(0f, 999f);
+    chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(0f, 999f);
     CreateChunkGenerators();
   }
 
   private void CreateChunkGenerators()
   {
-    foreach (Vector3 chunkLocation in chunkLocations)
+    foreach (Vector3 chunkLocation in chunkOffsets)
     {
       Vector3 newChunkLocation = transform.position + chunkLocation * chunkDistance;
-      string newChunkName = newChunkLocation.x + "," + newChunkLocation.z;
       ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, newChunkLocation, Quaternion.identity, transform);
-      if (chunkTable.ContainsKey(newChunkName))
+      newChunk.UpdateName();
+      if (chunkTable.ContainsKey(newChunkLocation))
       {
         continue;
       }
-      chunkTable.Add(newChunkName, newChunk);
+      chunkTable.Add(newChunkLocation, newChunk);
     }
   }
 
   public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
   {
-    if (chunkTable.ContainsKey(chunkGenerator.name))
+    if (chunkTable.ContainsKey(chunkGenerator.transform.position))
     {
       return true;
     }
@@ -45,7 +55,7 @@ public class WorldManager : MonoBehaviour
     }
   }
 
-  public bool GetChunkGeneratorByIndex(string chunkGeneratorName)
+  public bool GetChunkGeneratorByVector(Vector3 chunkGeneratorName)
   {
     if (chunkTable.ContainsKey(chunkGeneratorName))
     {
@@ -55,5 +65,13 @@ public class WorldManager : MonoBehaviour
     {
       return false;
     }
+  }
+
+  public ChunkPerlinOffsets GetPerlinOffset(Vector3 chunkGenerator)
+  {
+    ChunkPerlinOffsets newPerlinOffsets;
+    newPerlinOffsets.chunkOffsetX = chunkPerlinOffsets.chunkOffsetX + chunkGenerator.x;
+    newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z;
+    return newPerlinOffsets;
   }
 }

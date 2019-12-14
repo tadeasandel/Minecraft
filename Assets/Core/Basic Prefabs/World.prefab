@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2266105521604433356
 Transform:
@@ -46,7 +46,7 @@ MonoBehaviour:
   chunkGeneratorPrefab: {fileID: 838513650072041738, guid: b8a728583429bbf4c8051a9dfebeba24,
     type: 3}
   chunkDistance: 20
-  chunkLocations:
+  chunkOffsets:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
   - {x: 1, y: 0, z: 1}

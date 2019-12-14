@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1461088833159643006
 Transform:
@@ -46,5 +46,6 @@ MonoBehaviour:
   chunkHeight: 20
   chunkWidth: 20
   chunkDepth: 1
+  perlinScale: 1000
   basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-  offset: {x: -10, y: 0, z: -10}
+  generationOffset: {x: -10, y: 0, z: -10}

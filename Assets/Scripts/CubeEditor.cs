@@ -55,7 +55,7 @@ public class CubeEditor : MonoBehaviour
       {
         RevealTransform(childTable[directions[i]]);
       }
-      if (cubeParent.DoesHaveNeighbour(neighbourCube.ToString()))
+      if (cubeParent.DoesHaveNeighbour(neighbourCube))
       {
         if (childTable.ContainsKey(directions[i]))
         {
@@ -63,7 +63,7 @@ public class CubeEditor : MonoBehaviour
         }
         if (firstTime)
         {
-          CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
+          CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
           temporaryCubeEditor.ProcessNeighbours(false);
         }
       }
@@ -76,9 +76,9 @@ public class CubeEditor : MonoBehaviour
     {
       Vector3 neighbourCube = transform.position + directions[i];
       cubeParent = GetComponentInParent<ChunkGenerator>();
-      if (cubeParent.DoesHaveNeighbour(neighbourCube.ToString()))
+      if (cubeParent.DoesHaveNeighbour(neighbourCube))
       {
-        CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByIndex(neighbourCube.ToString());
+        CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
         if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
         {
           temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);

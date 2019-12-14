@@ -9,20 +9,26 @@ public class ChunkGenerator : MonoBehaviour
   [SerializeField] float chunkWidth;
   [SerializeField] float chunkDepth;
 
+  [SerializeField] float perlinScale = 0.1f;
+
   [SerializeField] CubeEditor basicCubePrefab;
 
   WorldManager worldManager;
 
-  [SerializeField] Vector3 offset;
+  [SerializeField] Vector3 generationOffset;
+  float perlinOffsetX;
+  float perlinOffsetZ;
 
-  Dictionary<string, CubeEditor> cubeEditors = new Dictionary<string, CubeEditor>();
+  Dictionary<Vector3, CubeEditor> cubeEditors = new Dictionary<Vector3, CubeEditor>();
 
-  public CubeEditor GetCubeEditorByIndex(string cubeEditorName)
+
+
+  public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorName)
   {
     return cubeEditors[cubeEditorName];
   }
 
-  public bool DoesHaveNeighbour(string neighbourName)
+  public bool DoesHaveNeighbour(Vector3 neighbourName)
   {
     if (cubeEditors.ContainsKey(neighbourName))
     {
@@ -37,49 +43,66 @@ public class ChunkGenerator : MonoBehaviour
   private void Start()
   {
     worldManager = FindObjectOfType<WorldManager>();
-    if (!worldManager.IsChunkGenerated(this))
-    {
-      GenerateChunk();
-    }
+    // if (!worldManager.IsChunkGenerated(this))
+    // {
+    GenerateChunk();
+    // }
   }
 
   public void AddNewCube(CubeEditor cubeEditor)
   {
-    if (!cubeEditors.ContainsKey(cubeEditor.name))
+    if (!cubeEditors.ContainsKey(cubeEditor.transform.position))
     {
-      cubeEditors.Add(cubeEditor.name, cubeEditor);
+      cubeEditors.Add(cubeEditor.transform.position, cubeEditor);
     }
   }
 
   public void RemoveCube(CubeEditor cubeEditor)
   {
-    if (cubeEditors.ContainsKey(cubeEditor.name))
+    if (cubeEditors.ContainsKey(cubeEditor.transform.position))
     {
-      cubeEditors.Remove(cubeEditor.name);
+      cubeEditors.Remove(cubeEditor.transform.position);
     }
   }
 
   private void GenerateChunk()
   {
+    perlinOffsetX = worldManager.GetPerlinOffset(transform.position).chunkOffsetX;
+    perlinOffsetZ = worldManager.GetPerlinOffset(transform.position).chunkOffsetZ;
     for (int x = 0; x < chunkHeight; x++)
     {
-      for (int y = 0; y < chunkDepth; y++)
+      for (int z = 0; z < chunkWidth; z++)
       {
-        for (int z = 0; z < chunkHeight; z++)
+        float columnHeight = GenerateHeight(x, z);
+        for (int y = 0; y < columnHeight; y++)
         {
-          Vector3 newCubeLocation = transform.position + new Vector3((float)x, (float)y, (float)z) + offset;
+          Vector3 newCubeLocation = transform.position + new Vector3(x, y, z) + generationOffset;
           CubeEditor currentCubeEditor = Instantiate(basicCubePrefab, newCubeLocation, Quaternion.identity, transform);
           currentCubeEditor.UpdateName();
-          if (!cubeEditors.ContainsKey(currentCubeEditor.name))
+          if (!cubeEditors.ContainsKey(currentCubeEditor.transform.position))
           {
-            cubeEditors.Add(currentCubeEditor.name, currentCubeEditor);
+            cubeEditors.Add(currentCubeEditor.transform.position, currentCubeEditor);
+          }
+          else
+          {
+            Destroy(currentCubeEditor.gameObject);
           }
         }
       }
     }
   }
 
-  public void WelcomeNeighbour(string neighbourName, bool firstTime)
+  private float GenerateHeight(int x, int z)
+  {
+    float xCoord = (float)x / chunkHeight + perlinOffsetX;
+    float zCoord = (float)z / chunkWidth + perlinOffsetZ;
+    float columnHeight = Mathf.PerlinNoise(xCoord, zCoord);
+    columnHeight = columnHeight / 4 * 100;
+    columnHeight = Mathf.RoundToInt(columnHeight);
+    return columnHeight;
+  }
+
+  public void WelcomeNeighbour(Vector3 neighbourName, bool firstTime)
   {
     if (cubeEditors.ContainsKey(neighbourName))
     {
@@ -92,12 +115,7 @@ public class ChunkGenerator : MonoBehaviour
     Gizmos.DrawWireCube(transform.position, new Vector3(chunkHeight, chunkDepth, chunkWidth));
   }
 
-  private void Update()
-  {
-    UpdateName();
-  }
-
-  private void UpdateName()
+  public void UpdateName()
   {
     gameObject.name = transform.position.x + "," + transform.position.z;
   }
