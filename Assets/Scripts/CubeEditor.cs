@@ -67,6 +67,13 @@ public class CubeEditor : MonoBehaviour
           temporaryCubeEditor.ProcessNeighbours(false);
         }
       }
+      else
+      {
+        CubeEditor temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
+        if (temporaryCubeEditor == null) { continue; }
+        HideTransformByVector(directions[i]);
+        temporaryCubeEditor.HideTransformByVector(-directions[i]);
+      }
     }
   }
 
@@ -82,6 +89,14 @@ public class CubeEditor : MonoBehaviour
       {
         temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
       }
+    }
+  }
+
+  public void HideTransformByVector(Vector3 transformVector)
+  {
+    if (childTable.ContainsKey(transformVector))
+    {
+      childTable[transformVector].SetActive(false);
     }
   }
 

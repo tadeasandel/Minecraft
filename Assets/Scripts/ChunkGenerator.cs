@@ -19,7 +19,7 @@ public class ChunkGenerator : MonoBehaviour
   float perlinOffsetX;
   float perlinOffsetZ;
 
-  Dictionary<Vector3, CubeEditor> cubeEditors = new Dictionary<Vector3, CubeEditor>();
+  public Dictionary<Vector3, CubeEditor> cubeEditorTable = new Dictionary<Vector3, CubeEditor>();
 
   public GenerationSetup[] generationSetups;
 
@@ -27,9 +27,9 @@ public class ChunkGenerator : MonoBehaviour
 
   public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorName)
   {
-    if (cubeEditors.ContainsKey(cubeEditorName))
+    if (cubeEditorTable.ContainsKey(cubeEditorName))
     {
-      return cubeEditors[cubeEditorName];
+      return cubeEditorTable[cubeEditorName];
     }
     else
     {
@@ -39,7 +39,7 @@ public class ChunkGenerator : MonoBehaviour
 
   public bool DoesHaveNeighbour(Vector3 neighbourName)
   {
-    if (cubeEditors.ContainsKey(neighbourName))
+    if (cubeEditorTable.ContainsKey(neighbourName))
     {
       return true;
     }
@@ -57,7 +57,8 @@ public class ChunkGenerator : MonoBehaviour
       ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
       if (neighbourChunk == null) { continue; }
       neighbourName = TransformCubeToNeighbourPos(neighbourName);
-      CubeEditor neighbourCube = neighbourChunk.cubeEditors[neighbourName];
+      if (!neighbourChunk.cubeEditorTable.ContainsKey(neighbourName)) { continue; }
+      CubeEditor neighbourCube = neighbourChunk.cubeEditorTable[neighbourName];
       return neighbourCube;
     }
     return null;
@@ -88,32 +89,28 @@ public class ChunkGenerator : MonoBehaviour
   private void Start()
   {
     worldManager = FindObjectOfType<WorldManager>();
-    // if (!worldManager.IsChunkGenerated(this))
-    // {
-    GenerateChunk();
-    // }
   }
 
   public void AddNewCube(CubeEditor cubeEditor)
   {
-    if (!cubeEditors.ContainsKey(cubeEditor.transform.position))
+    if (!cubeEditorTable.ContainsKey(cubeEditor.transform.position))
     {
-      cubeEditors.Add(cubeEditor.transform.position, cubeEditor);
+      cubeEditorTable.Add(cubeEditor.transform.position, cubeEditor);
     }
   }
 
   public void RemoveCube(CubeEditor cubeEditor)
   {
-    if (cubeEditors.ContainsKey(cubeEditor.transform.position))
+    if (cubeEditorTable.ContainsKey(cubeEditor.transform.position))
     {
-      cubeEditors.Remove(cubeEditor.transform.position);
+      cubeEditorTable.Remove(cubeEditor.transform.position);
     }
   }
 
-  private void GenerateChunk()
+  public void GenerateChunk(ChunkPerlinOffsets chunkPerlinOffsets)
   {
-    perlinOffsetX = worldManager.GetPerlinOffset(transform.position).chunkOffsetX;
-    perlinOffsetZ = worldManager.GetPerlinOffset(transform.position).chunkOffsetZ;
+    perlinOffsetX = chunkPerlinOffsets.chunkOffsetX;
+    perlinOffsetZ = chunkPerlinOffsets.chunkOffsetZ;
     for (int x = 0; x < chunkHeight; x++)
     {
       for (int z = 0; z < chunkWidth; z++)
@@ -125,9 +122,9 @@ public class ChunkGenerator : MonoBehaviour
           CubeEditor currentCubeEditor = Instantiate(basicCubePrefab, newCubeLocation, Quaternion.identity, transform);
           currentCubeEditor.UpdateName();
           currentCubeEditor.SetCubeType(ProcessCubeType(y));
-          if (!cubeEditors.ContainsKey(currentCubeEditor.transform.position))
+          if (!cubeEditorTable.ContainsKey(currentCubeEditor.transform.position))
           {
-            cubeEditors.Add(currentCubeEditor.transform.position, currentCubeEditor);
+            cubeEditorTable.Add(currentCubeEditor.transform.position, currentCubeEditor);
           }
           else
           {
@@ -136,6 +133,11 @@ public class ChunkGenerator : MonoBehaviour
         }
       }
     }
+  }
+
+  public void DeGenerateChunk()
+  {
+
   }
 
   private CubeType ProcessCubeType(int y)
@@ -167,9 +169,9 @@ public class ChunkGenerator : MonoBehaviour
 
   public void WelcomeNeighbour(Vector3 neighbourName, bool firstTime)
   {
-    if (cubeEditors.ContainsKey(neighbourName))
+    if (cubeEditorTable.ContainsKey(neighbourName))
     {
-      cubeEditors[neighbourName].ProcessNeighbours(firstTime);
+      cubeEditorTable[neighbourName].ProcessNeighbours(firstTime);
     }
   }
 

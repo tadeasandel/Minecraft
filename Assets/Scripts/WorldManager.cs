@@ -13,12 +13,6 @@ public class WorldManager : MonoBehaviour
 
   [SerializeField] Vector3[] chunkOffsets;
 
-  public struct ChunkPerlinOffsets
-  {
-    public float chunkOffsetX;
-    public float chunkOffsetZ;
-  }
-
   public ChunkPerlinOffsets chunkPerlinOffsets;
 
   private void Start()
@@ -40,6 +34,7 @@ public class WorldManager : MonoBehaviour
         continue;
       }
       chunkTable.Add(newChunkLocation, newChunk);
+      newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
     }
   }
 
@@ -67,7 +62,7 @@ public class WorldManager : MonoBehaviour
     }
   }
 
-  public ChunkPerlinOffsets GetPerlinOffset(Vector3 chunkGenerator)
+  private ChunkPerlinOffsets GetPerlinOffset(Vector3 chunkGenerator)
   {
     ChunkPerlinOffsets newPerlinOffsets;
     newPerlinOffsets.chunkOffsetX = chunkPerlinOffsets.chunkOffsetX + chunkGenerator.x;
@@ -75,3 +70,10 @@ public class WorldManager : MonoBehaviour
     return newPerlinOffsets;
   }
 }
+
+public struct ChunkPerlinOffsets
+{
+  public float chunkOffsetX;
+  public float chunkOffsetZ;
+}
+
