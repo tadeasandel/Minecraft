@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ChunkGenerator : MonoBehaviour
 {
-  [SerializeField] float chunkHeight;
-  [SerializeField] float chunkWidth;
+  float chunkHeight;
+  float chunkWidth;
   [SerializeField] float maxDepth;
 
   [SerializeField] float perlinScale = 0.1f;
@@ -15,7 +15,7 @@ public class ChunkGenerator : MonoBehaviour
 
   WorldManager worldManager;
 
-  [SerializeField] Vector3 generationOffset;
+  Vector3 generationOffset;
   float perlinOffsetX;
   float perlinOffsetZ;
 
@@ -24,6 +24,36 @@ public class ChunkGenerator : MonoBehaviour
   public GenerationSetup[] generationSetups;
 
   [SerializeField] Vector3[] directions;
+
+  [SerializeField] float distanceForDisabling;
+  [SerializeField] float distanceForDestroying;
+
+  GameObject player;
+
+  private void Update()
+  {
+    if (DistanceToPlayer() > distanceForDestroying)
+    {
+      DeGenerateChunk();
+    }
+    else if (DistanceToPlayer() > distanceForDisabling)
+    {
+      worldManager.DisableChunk(transform.position);
+    }
+  }
+
+  private float DistanceToPlayer()
+  {
+    return Vector3.Distance(transform.position, player.transform.position);
+  }
+
+  private void OnTriggerEnter(Collider other)
+  {
+    if (other.CompareTag("Player"))
+    {
+      worldManager.RefreshChunks(transform.position);
+    }
+  }
 
   public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorName)
   {
@@ -66,21 +96,21 @@ public class ChunkGenerator : MonoBehaviour
 
   public Vector3 TransformCubeToNeighbourPos(Vector3 neighbourPos)
   {
-    if (neighbourPos == new Vector3(0, 0, 20))
+    if (neighbourPos == new Vector3(0, 0, chunkHeight))
     {
-      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z - 19);
+      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z - chunkHeight + 1);
     }
-    else if (neighbourPos == new Vector3(0, 0, -20))
+    else if (neighbourPos == new Vector3(0, 0, -chunkHeight))
     {
-      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z + 19);
+      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z + chunkHeight - 1);
     }
-    else if (neighbourPos == new Vector3(20, 0, 0))
+    else if (neighbourPos == new Vector3(chunkHeight, 0, 0))
     {
-      neighbourPos = new Vector3(neighbourPos.x - 19, neighbourPos.y, neighbourPos.z);
+      neighbourPos = new Vector3(neighbourPos.x - chunkHeight + 1, neighbourPos.y, neighbourPos.z);
     }
-    else if (neighbourPos == new Vector3(-20, 0, 0))
+    else if (neighbourPos == new Vector3(-chunkHeight, 0, 0))
     {
-      neighbourPos = new Vector3(neighbourPos.x + 19, neighbourPos.y, neighbourPos.z);
+      neighbourPos = new Vector3(neighbourPos.x + chunkHeight - 1, neighbourPos.y, neighbourPos.z);
     }
 
     return neighbourPos;
@@ -89,6 +119,15 @@ public class ChunkGenerator : MonoBehaviour
   private void Start()
   {
     worldManager = FindObjectOfType<WorldManager>();
+    player = GameObject.FindWithTag("Player");
+  }
+
+  public void SetChunkSetup()
+  {
+    float chunkDistance = FindObjectOfType<WorldManager>().GetChunkDistance();
+    chunkWidth = chunkDistance;
+    chunkHeight = chunkDistance;
+    generationOffset = new Vector3(-chunkDistance / 2, 0, -chunkDistance / 2);
   }
 
   public void AddNewCube(CubeEditor cubeEditor)
@@ -137,7 +176,23 @@ public class ChunkGenerator : MonoBehaviour
 
   public void DeGenerateChunk()
   {
+    // for (int x = 0; x < chunkHeight; x++)
+    // {
+    //   for (int z = 0; z < chunkWidth; z++)
+    //   {
+    //     float columnHeight = GenerateHeight(x, z);
+    //     for (int y = 0; y < columnHeight; y++)
+    //     {
+    //       Vector3 cubeLocation = transform.position + new Vector3(x, y, z) + generationOffset;
+    //       if (cubeEditorTable.ContainsKey(cubeLocation))
+    //       {
 
+    //       }
+    //       CubeEditor currentCubeEditor = cubeEditorTable[cubeLocation];
+    //       Destroy(currentCubeEditor.gameObject);
+    //     }
+    //   }
+    // }
   }
 
   private CubeType ProcessCubeType(int y)
@@ -173,11 +228,6 @@ public class ChunkGenerator : MonoBehaviour
     {
       cubeEditorTable[neighbourName].ProcessNeighbours(firstTime);
     }
-  }
-
-  private void OnDrawGizmos()
-  {
-    Gizmos.DrawWireCube(transform.position, new Vector3(chunkHeight, maxDepth, chunkWidth));
   }
 
   public void UpdateName()

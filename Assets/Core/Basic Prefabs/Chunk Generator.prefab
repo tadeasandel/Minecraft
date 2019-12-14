@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1461088833159643006}
   - component: {fileID: 838513650072041738}
-  - component: {fileID: 6258067227198393969}
+  - component: {fileID: 8249253710442097541}
   m_Layer: 0
   m_Name: Chunk Generator
   m_TagString: Untagged
@@ -44,12 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2251b2c8ce557a41b5ba7d28923af34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkHeight: 20
-  chunkWidth: 20
   maxDepth: 20
   perlinScale: 1000
   basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-  generationOffset: {x: -10, y: 0, z: -10}
   generationSetups:
   - generatedCubeType: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
       type: 2}
@@ -72,7 +69,9 @@ MonoBehaviour:
   - {x: -20, y: 0, z: 0}
   - {x: 0, y: 0, z: 20}
   - {x: 0, y: 0, z: -20}
---- !u!65 &6258067227198393969
+  distanceForDisabling: 60
+  distanceForDestroying: 100
+--- !u!65 &8249253710442097541
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,4 +83,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 20, y: 20, z: 20}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 10, z: 0}
