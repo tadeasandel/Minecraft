@@ -29,8 +29,6 @@ public class ObjectInteractionController : MonoBehaviour
 
   float cubeToughness;
 
-  bool isDigging = false;
-
   float miningCalculation;
   float miningTime;
 
@@ -133,7 +131,7 @@ public class ObjectInteractionController : MonoBehaviour
         miningTime = 0;
       }
       currentObjectName = hit.transform.parent.name;
-      miningCalculation = currentToolType.miningSpeed / target.targetCube.GetCubeType().toughness;
+      miningCalculation = target.targetCube.GetCubeType().toughness / currentToolType.miningSpeed;
       miningTime += Time.deltaTime;
       if (miningCalculation <= miningTime)
       {

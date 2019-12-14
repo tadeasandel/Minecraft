@@ -45,7 +45,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunkHeight: 20
   chunkWidth: 20
-  chunkDepth: 1
+  maxDepth: 20
   perlinScale: 1000
   basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
   generationOffset: {x: -10, y: 0, z: -10}
+  generationSetups:
+  - generatedCubeType: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
+      type: 2}
+    maxGenerationDepth: 20
+    minGenerationDepth: 17
+  - generatedCubeType: {fileID: 11400000, guid: 5536799a9eda7484988d5356e82a0e30,
+      type: 2}
+    maxGenerationDepth: 16
+    minGenerationDepth: 8
+  - generatedCubeType: {fileID: 11400000, guid: 92b96ab8c5353aa4088b646fb54da071,
+      type: 2}
+    maxGenerationDepth: 7
+    minGenerationDepth: 4
+  - generatedCubeType: {fileID: 11400000, guid: 8f65b8545a10ff042adf367ec2aa8c13,
+      type: 2}
+    maxGenerationDepth: 3
+    minGenerationDepth: 0

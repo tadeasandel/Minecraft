@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2afae58656d3c4083023d7efdd4551, type: 3}
+  m_Name: Snow
+  m_EditorClassIdentifier: 
+  toughness: 10
+  cubeTypeName: 
+  materials:
+  - {fileID: 2100000, guid: dc608ee456c0f2a448bca8e1d23126bb, type: 2}
+  - {fileID: 2100000, guid: 495dc87f2e698ec45884ea4be92752c1, type: 2}
+  - {fileID: 2100000, guid: 3d85390e1681ac34bada42687c8e0928, type: 2}
+  - {fileID: 2100000, guid: 6bf0f8e06ad7f534fbe1c8f68f28b25f, type: 2}
+  - {fileID: 2100000, guid: cfa114399b7216547a519651fb5fdcee, type: 2}
+  - {fileID: 2100000, guid: 9b6b2b5528f8eac43bc1e013693ec279, type: 2}

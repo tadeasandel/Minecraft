@@ -1108,6 +1108,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Stone
       objectReference: {fileID: 0}
+    - target: {fileID: 155334321276201339, guid: ed8eae8a813a3254585ee7aee6b656a9,
+        type: 3}
+      propertyPath: currentCubeType
+      value: 
+      objectReference: {fileID: 11400000, guid: 92b96ab8c5353aa4088b646fb54da071,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed8eae8a813a3254585ee7aee6b656a9, type: 3}
 --- !u!224 &1009828923 stripped
@@ -1238,6 +1244,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Snow
       objectReference: {fileID: 0}
+    - target: {fileID: 155334321276201339, guid: ed8eae8a813a3254585ee7aee6b656a9,
+        type: 3}
+      propertyPath: currentCubeType
+      value: 
+      objectReference: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed8eae8a813a3254585ee7aee6b656a9, type: 3}
 --- !u!224 &1181452135 stripped
@@ -1728,13 +1740,18 @@ PrefabInstance:
     - target: {fileID: 4253618630795794147, guid: ed8eae8a813a3254585ee7aee6b656a9,
         type: 3}
       propertyPath: m_Text
-      value: Basic
+      value: Cheat
       objectReference: {fileID: 0}
     - target: {fileID: 155334321276201339, guid: ed8eae8a813a3254585ee7aee6b656a9,
         type: 3}
       propertyPath: currentCubeType
       value: 
-      objectReference: {fileID: 11400000, guid: fbd949e33a069274281175030cfcf75c,
+      objectReference: {fileID: 0}
+    - target: {fileID: 155334321276201339, guid: ed8eae8a813a3254585ee7aee6b656a9,
+        type: 3}
+      propertyPath: currentToolType
+      value: 
+      objectReference: {fileID: 11400000, guid: e8eadcef7eb4dbc42ad0343bb4d190d5,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed8eae8a813a3254585ee7aee6b656a9, type: 3}

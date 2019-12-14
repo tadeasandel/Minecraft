@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2afae58656d3c4083023d7efdd4551, type: 3}
+  m_Name: Bedrock
+  m_EditorClassIdentifier: 
+  toughness: Infinity
+  cubeTypeName: Bedrock
+  materials:
+  - {fileID: 2100000, guid: 6fe0d9f17e122db4c9ff3ebfe081c027, type: 2}
+  - {fileID: 2100000, guid: 189ccf2ea95ae2b4e8375317a1eb475d, type: 2}
+  - {fileID: 2100000, guid: 6f43a1a7ed22b4741a672e11283876e7, type: 2}
+  - {fileID: 2100000, guid: b55bf9ac9c9ff56439500a1cb47750b6, type: 2}
+  - {fileID: 2100000, guid: 56b4dc66c6aa8344fb984f9ec4652467, type: 2}
+  - {fileID: 2100000, guid: afabda73fcf0cfe4e9498da2bfc7f5a3, type: 2}

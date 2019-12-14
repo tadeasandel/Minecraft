@@ -55,15 +55,15 @@ public class WorldManager : MonoBehaviour
     }
   }
 
-  public bool GetChunkGeneratorByVector(Vector3 chunkGeneratorName)
+  public ChunkGenerator GetChunkGeneratorByVector(Vector3 chunkGeneratorName)
   {
     if (chunkTable.ContainsKey(chunkGeneratorName))
     {
-      return true;
+      return chunkTable[chunkGeneratorName];
     }
     else
     {
-      return false;
+      return null;
     }
   }
 

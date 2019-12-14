@@ -76,13 +76,11 @@ public class CubeEditor : MonoBehaviour
     {
       Vector3 neighbourCube = transform.position + directions[i];
       cubeParent = GetComponentInParent<ChunkGenerator>();
-      if (cubeParent.DoesHaveNeighbour(neighbourCube))
+      CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
+      if (temporaryCubeEditor == null) { continue; }
+      if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
       {
-        CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
-        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
-        {
-          temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
-        }
+        temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
       }
     }
   }
