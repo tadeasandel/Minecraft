@@ -12,15 +12,58 @@ public class WorldManager : MonoBehaviour
   public Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
   public List<Vector3> chunkPositions = new List<Vector3>();
 
-  [SerializeField] Vector3[] chunkOffsets;
+  [SerializeField] int loadedChunkDistance;
+  [SerializeField] int disabledChunkDistance;
+  [SerializeField] int DestroyedChunkDistance;
+
+  public List<Vector3> loadedChunkArea = new List<Vector3>();
+  public List<Vector3> disabledChunkArea = new List<Vector3>();
+  public List<Vector3> destroyedChunkArea = new List<Vector3>();
 
   public ChunkPerlinOffsets chunkPerlinOffsets;
+
+  Vector3 currentCenterChunkPos = new Vector3(0, 0, 0);
 
   private void Start()
   {
     chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(999f, 99999f);
     chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(999f, 99999f);
+    FillAreas();
     CreateChunkGenerators();
+  }
+
+  private void FillAreas()
+  {
+    FillArea(loadedChunkArea, loadedChunkDistance);
+    FillArea(disabledChunkArea, disabledChunkDistance);
+    FillArea(destroyedChunkArea, DestroyedChunkDistance);
+    UnfillArea(destroyedChunkArea, disabledChunkArea);
+    UnfillArea(disabledChunkArea, loadedChunkArea);
+  }
+
+  private void FillArea(List<Vector3> areaToFill, int areaSize)
+  {
+    for (int x = -areaSize; x < areaSize + 1; x++)
+    {
+      for (int z = -areaSize; z < areaSize + 1; z++)
+      {
+        areaToFill.Add(new Vector3(x, 0, z));
+      }
+    }
+  }
+
+  private void UnfillArea(List<Vector3> filledArea, List<Vector3> areaToRemove)
+  {
+    if (areaToRemove != null)
+    {
+      foreach (var area in areaToRemove)
+      {
+        if (filledArea.Contains(area))
+        {
+          filledArea.Remove(area);
+        }
+      }
+    }
   }
 
   public float GetChunkDistance()
@@ -31,9 +74,9 @@ public class WorldManager : MonoBehaviour
   private void CreateChunkGenerators()
   {
     int i = 0;
-    foreach (Vector3 chunkLocation in chunkOffsets)
+    foreach (Vector3 loadedArea in loadedChunkArea)
     {
-      Vector3 newChunkLocation = transform.position + chunkLocation * chunkDistance;
+      Vector3 newChunkLocation = transform.position + loadedArea * chunkDistance;
       CreateChunk(newChunkLocation);
       i++;
     }
@@ -42,20 +85,36 @@ public class WorldManager : MonoBehaviour
   public void RefreshChunks(Vector3 centerChunkPos)
   {
     print("refresh called");
-    int i = 0;
-    foreach (Vector3 chunkOffset in chunkOffsets)
+    Vector3 previousCenterChunk = currentCenterChunkPos;
+    currentCenterChunkPos = centerChunkPos;
+    foreach (Vector3 loadedArea in loadedChunkArea)
     {
-      if (chunkOffset == new Vector3(0, 0, 0)) { continue; }
-      Vector3 chunkPos = centerChunkPos + chunkOffset * chunkDistance;
-      if (!chunkTable.ContainsKey(chunkPos))
+      if (loadedArea == new Vector3(0, 0, 0)) { continue; }
+      Vector3 neighbourChunkPos = centerChunkPos + loadedArea * chunkDistance;
+      if (!chunkTable.ContainsKey(neighbourChunkPos))
       {
-        CreateChunk(chunkPos);
+        CreateChunk(neighbourChunkPos);
       }
       else
       {
-        DisableChunk(chunkPos);
+        EnableChunk(neighbourChunkPos);
       }
-      i++;
+    }
+    foreach (Vector3 disableArea in disabledChunkArea)
+    {
+      Vector3 disableChunkPos = centerChunkPos + disableArea * chunkDistance;
+      if (chunkTable.ContainsKey(disableChunkPos))
+      {
+        DisableChunk(disableChunkPos);
+      }
+    }
+    foreach (Vector3 destroyArea in destroyedChunkArea)
+    {
+      Vector3 destroyChunkPos = centerChunkPos + destroyArea * chunkDistance;
+      if (chunkTable.ContainsKey(destroyChunkPos))
+      {
+        DestroyChunk(destroyChunkPos);
+      }
     }
   }
 
@@ -85,6 +144,14 @@ public class WorldManager : MonoBehaviour
     if (chunkTable.ContainsKey(chunkPos))
     {
       chunkTable[chunkPos].gameObject.SetActive(false);
+    }
+  }
+
+  private void EnableChunk(Vector3 chunkPos)
+  {
+    if (chunkTable.ContainsKey(chunkPos))
+    {
+      chunkTable[chunkPos].gameObject.SetActive(true);
     }
   }
 

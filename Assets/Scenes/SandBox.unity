@@ -790,7 +790,7 @@ PrefabInstance:
     - target: {fileID: 7860629156409474660, guid: f7d0d76d614afd74a93a271342029475,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7860629156409474660, guid: f7d0d76d614afd74a93a271342029475,
         type: 3}
@@ -1878,6 +1878,21 @@ PrefabInstance:
         type: 3}
       propertyPath: perlinNoiseValues.Array.data[7].chunkOffsetX
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: loadedChunkDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: disabledChunkDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: DestroyedChunkDistance
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d, type: 3}
