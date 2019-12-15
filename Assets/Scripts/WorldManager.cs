@@ -84,7 +84,6 @@ public class WorldManager : MonoBehaviour
 
   public void RefreshChunks(Vector3 centerChunkPos)
   {
-    print("refresh called");
     Vector3 previousCenterChunk = currentCenterChunkPos;
     currentCenterChunkPos = centerChunkPos;
     foreach (Vector3 loadedArea in loadedChunkArea)
