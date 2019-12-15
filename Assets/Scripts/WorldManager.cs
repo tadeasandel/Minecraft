@@ -9,7 +9,8 @@ public class WorldManager : MonoBehaviour
 
   [SerializeField] float chunkDistance;
 
-  Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
+  public Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
+  public List<Vector3> chunkPositions = new List<Vector3>();
 
   [SerializeField] Vector3[] chunkOffsets;
 
@@ -17,8 +18,8 @@ public class WorldManager : MonoBehaviour
 
   private void Start()
   {
-    chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(0f, 999f);
-    chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(0f, 999f);
+    chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(999f, 99999f);
+    chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(999f, 99999f);
     CreateChunkGenerators();
   }
 
@@ -29,42 +30,33 @@ public class WorldManager : MonoBehaviour
 
   private void CreateChunkGenerators()
   {
+    int i = 0;
     foreach (Vector3 chunkLocation in chunkOffsets)
     {
       Vector3 newChunkLocation = transform.position + chunkLocation * chunkDistance;
       CreateChunk(newChunkLocation);
-    }
-  }
-
-  public void DisableChunk(Vector3 chunkPos)
-  {
-    if (chunkTable.ContainsKey(chunkPos))
-    {
-      chunkTable[chunkPos].gameObject.SetActive(false);
+      i++;
     }
   }
 
   public void RefreshChunks(Vector3 centerChunkPos)
   {
+    print("refresh called");
+    int i = 0;
     foreach (Vector3 chunkOffset in chunkOffsets)
     {
       if (chunkOffset == new Vector3(0, 0, 0)) { continue; }
-      Vector3 neighbourChunkPos = centerChunkPos + chunkOffset * chunkDistance;
-      if (!chunkTable.ContainsKey(neighbourChunkPos))
+      Vector3 chunkPos = centerChunkPos + chunkOffset * chunkDistance;
+      if (!chunkTable.ContainsKey(chunkPos))
       {
-        CreateChunk(neighbourChunkPos);
+        CreateChunk(chunkPos);
       }
       else
       {
-        chunkTable[neighbourChunkPos].enabled = true;
+        DisableChunk(chunkPos);
       }
+      i++;
     }
-  }
-
-  private void DestroyChunk(Vector3 chunkPos)
-  {
-    Destroy(chunkTable[chunkPos].gameObject);
-    chunkTable.Remove(chunkPos);
   }
 
   private void CreateChunk(Vector3 chunkPos)
@@ -74,8 +66,25 @@ public class WorldManager : MonoBehaviour
     if (!chunkTable.ContainsKey(chunkPos))
     {
       chunkTable.Add(chunkPos, newChunk);
+      chunkPositions.Add(chunkPos);
       newChunk.SetChunkSetup();
       newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
+      newChunk.SetBoxCollider();
+    }
+  }
+
+  private void DestroyChunk(Vector3 chunkPos)
+  {
+    Destroy(chunkTable[chunkPos].gameObject);
+    chunkTable.Remove(chunkPos);
+    chunkPositions.Remove(chunkPos);
+  }
+
+  public void DisableChunk(Vector3 chunkPos)
+  {
+    if (chunkTable.ContainsKey(chunkPos))
+    {
+      chunkTable[chunkPos].gameObject.SetActive(false);
     }
   }
 
@@ -106,12 +115,13 @@ public class WorldManager : MonoBehaviour
   private ChunkPerlinOffsets GetPerlinOffset(Vector3 chunkGenerator)
   {
     ChunkPerlinOffsets newPerlinOffsets;
-    newPerlinOffsets.chunkOffsetX = chunkPerlinOffsets.chunkOffsetX + chunkGenerator.x;
-    newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z;
+    newPerlinOffsets.chunkOffsetX = chunkPerlinOffsets.chunkOffsetX + chunkGenerator.x / chunkDistance;
+    newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z / chunkDistance;
     return newPerlinOffsets;
   }
 }
 
+[System.Serializable]
 public struct ChunkPerlinOffsets
 {
   public float chunkOffsetX;

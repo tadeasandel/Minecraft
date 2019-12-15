@@ -1791,8 +1791,93 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
         type: 3}
+      propertyPath: perlinNoiseValues.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
       propertyPath: chunkDistance
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[1].chunkOffsetX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[1].chunkOffsetZ
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[2].chunkOffsetX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[4].chunkOffsetX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[5].chunkOffsetX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[6].chunkOffsetX
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[8].chunkOffsetX
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[2].chunkOffsetZ
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[3].chunkOffsetZ
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[4].chunkOffsetZ
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[6].chunkOffsetZ
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[7].chunkOffsetZ
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[8].chunkOffsetZ
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[3].chunkOffsetX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[5].chunkOffsetZ
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
+      propertyPath: perlinNoiseValues.Array.data[7].chunkOffsetX
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d, type: 3}

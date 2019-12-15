@@ -8,6 +8,7 @@ public class CubeEditor : MonoBehaviour
 {
   Dictionary<string, Vector3> sideOffset = new Dictionary<string, Vector3>();
   public Dictionary<Vector3, GameObject> childTable = new Dictionary<Vector3, GameObject>();
+  public List<GameObject> childLocations = new List<GameObject>();
 
   [SerializeField] Vector3[] verticles;
 
@@ -23,9 +24,18 @@ public class CubeEditor : MonoBehaviour
 
   Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down };
 
+  public void SetCubeParent(ChunkGenerator chunkGenerator)
+  {
+    cubeParent = chunkGenerator;
+  }
+
   private void Start()
   {
-    cubeParent = GetComponentInParent<ChunkGenerator>();
+    if (cubeParent == null)
+    {
+      print("getting parent");
+      cubeParent = GetComponentInParent<ChunkGenerator>();
+    }
     SetOffset();
     SetCubeType(currentCubeType);
     ApplyCubeType();
@@ -40,7 +50,7 @@ public class CubeEditor : MonoBehaviour
     cubeParent.AddNewCube(this);
   }
 
-  private void RemoveCubeFromParent()
+  private void DestroyCube()
   {
     cubeParent.RemoveCube(this);
   }
@@ -50,7 +60,7 @@ public class CubeEditor : MonoBehaviour
     for (int i = 0; i < 6; i++)
     {
       Vector3 neighbourCube = transform.position + directions[i];
-      cubeParent = GetComponentInParent<ChunkGenerator>();
+      CubeEditor temporaryCubeEditor;
       if (childTable.ContainsKey(directions[i]))
       {
         RevealTransform(childTable[directions[i]]);
@@ -63,16 +73,19 @@ public class CubeEditor : MonoBehaviour
         }
         if (firstTime)
         {
-          CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
+          temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
           temporaryCubeEditor.ProcessNeighbours(false);
         }
       }
       else
       {
-        CubeEditor temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
+        temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
         if (temporaryCubeEditor == null) { continue; }
         HideTransformByVector(directions[i]);
-        temporaryCubeEditor.HideTransformByVector(-directions[i]);
+        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
+        {
+          temporaryCubeEditor.HideTransformByVector(-directions[i]);
+        }
       }
     }
   }
@@ -88,6 +101,15 @@ public class CubeEditor : MonoBehaviour
       if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
       {
         temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
+      }
+      else
+      {
+        temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
+        if (temporaryCubeEditor == null) { continue; }
+        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
+        {
+          temporaryCubeEditor.HideTransformByVector(-directions[i]);
+        }
       }
     }
   }
@@ -141,6 +163,7 @@ public class CubeEditor : MonoBehaviour
       if (!childTable.ContainsKey(directions[i]))
       {
         childTable.Add(directions[i], transform.GetChild(i).gameObject);
+        childLocations.Add(transform.GetChild(i).gameObject);
       }
     }
   }
@@ -188,7 +211,6 @@ public class CubeEditor : MonoBehaviour
   public void DestroyBlock()
   {
     AdjustNeighbours();
-    RemoveCubeFromParent();
-    Destroy(gameObject);
+    DestroyCube();
   }
 }

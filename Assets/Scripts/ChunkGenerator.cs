@@ -20,6 +20,7 @@ public class ChunkGenerator : MonoBehaviour
   float perlinOffsetZ;
 
   public Dictionary<Vector3, CubeEditor> cubeEditorTable = new Dictionary<Vector3, CubeEditor>();
+  public List<Vector3> cubePositionTable = new List<Vector3>();
 
   public GenerationSetup[] generationSetups;
 
@@ -30,16 +31,21 @@ public class ChunkGenerator : MonoBehaviour
 
   GameObject player;
 
-  private void Update()
+  // private void Update()
+  // {
+  //   if (DistanceToPlayer() > distanceForDestroying)
+  //   {
+  //     DeGenerateChunk();
+  //   }
+  //   else if (DistanceToPlayer() > distanceForDisabling)
+  //   {
+  //     worldManager.DisableChunk(transform.position);
+  //   }
+  // }
+
+  private void Awake()
   {
-    if (DistanceToPlayer() > distanceForDestroying)
-    {
-      DeGenerateChunk();
-    }
-    else if (DistanceToPlayer() > distanceForDisabling)
-    {
-      worldManager.DisableChunk(transform.position);
-    }
+    SetBoxCollider();
   }
 
   private float DistanceToPlayer()
@@ -55,16 +61,26 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
-  public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorName)
+  public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorPos)
   {
-    if (cubeEditorTable.ContainsKey(cubeEditorName))
+    if (cubeEditorTable.ContainsKey(cubeEditorPos))
     {
-      return cubeEditorTable[cubeEditorName];
+      return cubeEditorTable[cubeEditorPos];
     }
     else
     {
-      return null;
+      for (int i = 0; i < 4; i++)
+      {
+        Vector3 neighbourChunkPos = transform.position + directions[i];
+        ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
+        if (neighbourChunk == null) { continue; }
+        cubeEditorPos = TransformCubeToNeighbourPos(cubeEditorPos);
+        if (!neighbourChunk.cubeEditorTable.ContainsKey(cubeEditorPos)) { continue; }
+        CubeEditor neighbourCube = neighbourChunk.cubeEditorTable[cubeEditorPos];
+        return neighbourCube;
+      }
     }
+    return null;
   }
 
   public bool DoesHaveNeighbour(Vector3 neighbourName)
@@ -122,6 +138,12 @@ public class ChunkGenerator : MonoBehaviour
     player = GameObject.FindWithTag("Player");
   }
 
+  public void SetBoxCollider()
+  {
+    BoxCollider boxCollider = GetComponent<BoxCollider>();
+    boxCollider.size = new Vector3(chunkHeight, chunkHeight, chunkHeight);
+  }
+
   public void SetChunkSetup()
   {
     float chunkDistance = FindObjectOfType<WorldManager>().GetChunkDistance();
@@ -136,13 +158,22 @@ public class ChunkGenerator : MonoBehaviour
     {
       cubeEditorTable.Add(cubeEditor.transform.position, cubeEditor);
     }
+    if (cubePositionTable.Contains(cubeEditor.transform.position))
+    {
+      cubePositionTable.Add(cubeEditor.transform.position);
+    }
   }
 
   public void RemoveCube(CubeEditor cubeEditor)
   {
+    Destroy(cubeEditor.gameObject);
     if (cubeEditorTable.ContainsKey(cubeEditor.transform.position))
     {
       cubeEditorTable.Remove(cubeEditor.transform.position);
+    }
+    if (cubePositionTable.Contains(cubeEditor.transform.position))
+    {
+      cubePositionTable.Remove(cubeEditor.transform.position);
     }
   }
 
@@ -160,14 +191,16 @@ public class ChunkGenerator : MonoBehaviour
           Vector3 newCubeLocation = transform.position + new Vector3(x, y, z) + generationOffset;
           CubeEditor currentCubeEditor = Instantiate(basicCubePrefab, newCubeLocation, Quaternion.identity, transform);
           currentCubeEditor.UpdateName();
+          currentCubeEditor.SetCubeParent(this);
           currentCubeEditor.SetCubeType(ProcessCubeType(y));
           if (!cubeEditorTable.ContainsKey(currentCubeEditor.transform.position))
           {
-            cubeEditorTable.Add(currentCubeEditor.transform.position, currentCubeEditor);
+            AddNewCube(currentCubeEditor);
           }
           else
           {
-            Destroy(currentCubeEditor.gameObject);
+            print("removing cube");
+            RemoveCube(currentCubeEditor);
           }
         }
       }
@@ -213,8 +246,8 @@ public class ChunkGenerator : MonoBehaviour
 
   private float GenerateHeight(int x, int z)
   {
-    float xCoord = (float)x / chunkHeight + perlinOffsetZ;
-    float zCoord = (float)z / chunkWidth + perlinOffsetX;
+    float xCoord = (float)x / chunkHeight + perlinOffsetX;
+    float zCoord = (float)z / chunkWidth + perlinOffsetZ;
     float columnHeight = Mathf.PerlinNoise(xCoord, zCoord);
     columnHeight = columnHeight / 4 * 100;
     columnHeight = Mathf.RoundToInt(columnHeight);
@@ -232,7 +265,7 @@ public class ChunkGenerator : MonoBehaviour
 
   public void UpdateName()
   {
-    gameObject.name = transform.position.x + "," + transform.position.z;
+    gameObject.name = transform.position.ToString();
   }
 }
 

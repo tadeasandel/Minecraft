@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1461088833159643006}
   - component: {fileID: 838513650072041738}
   - component: {fileID: 8249253710442097541}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Chunk Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,6 +47,7 @@ MonoBehaviour:
   maxDepth: 20
   perlinScale: 1000
   basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
+  cubePositionTable: []
   generationSetups:
   - generatedCubeType: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
       type: 2}
