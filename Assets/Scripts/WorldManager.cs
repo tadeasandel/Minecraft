@@ -24,12 +24,16 @@ public class WorldManager : MonoBehaviour
 
   Vector3 currentCenterChunkPos = new Vector3(0, 0, 0);
 
+  public List<ChunkData> chunksData = new List<ChunkData>();
+  public WorldData worldData;
+
   private void Start()
   {
     chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(999f, 99999f);
     chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(999f, 99999f);
     FillAreas();
     CreateChunkGenerators();
+    worldData = new WorldData(this);
   }
 
   private void FillAreas()
@@ -119,6 +123,10 @@ public class WorldManager : MonoBehaviour
 
   private void CreateChunk(Vector3 chunkPos)
   {
+    if (worldData.ContainsChunkByVector(chunkPos)) 
+    {
+      LoadChunkBydata(chunkPos);
+    }
     ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     newChunk.UpdateName();
     if (!chunkTable.ContainsKey(chunkPos))
@@ -128,7 +136,14 @@ public class WorldManager : MonoBehaviour
       newChunk.SetChunkSetup();
       newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
       newChunk.SetBoxCollider();
+      ChunkData chunkData = new ChunkData(newChunk);
+      chunksData.Add(chunkData);
     }
+  }
+
+  private void LoadChunkBydata(Vector3 chunkPos)
+  {
+    
   }
 
   private void DestroyChunk(Vector3 chunkPos)

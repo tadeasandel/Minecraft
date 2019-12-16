@@ -29,6 +29,8 @@ public class ChunkGenerator : MonoBehaviour
   [SerializeField] float distanceForDisabling;
   [SerializeField] float distanceForDestroying;
 
+  List<CubeData> cubesData = new List<CubeData>();
+
   GameObject player;
 
   // private void Update()
@@ -162,6 +164,9 @@ public class ChunkGenerator : MonoBehaviour
     {
       cubePositionTable.Add(cubeEditor.transform.position);
     }
+    CubeData cubeData = new CubeData(cubeEditor);
+    cubesData.Add(cubeData);
+
   }
 
   public void RemoveCube(CubeEditor cubeEditor)

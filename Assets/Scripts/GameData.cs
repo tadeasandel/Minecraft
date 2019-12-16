@@ -10,4 +10,6 @@ public class GameData : MonoBehaviour
     this.worldData = worldData;
     this.playerData = playerData;
   }
+
+  
 }
