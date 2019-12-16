@@ -3,18 +3,26 @@ using UnityEngine;
 
 public class WorldData : MonoBehaviour
 {
-  public ChunkPerlinOffsets generatedPerlinOffset;
-  ChunkDatabase chunkDatabase = new ChunkDatabase();
-  public List<ChunkData> chunkData;
+  public ChunkPerlinOffsets generatedPerlinOffset = new ChunkPerlinOffsets();
+  public ChunkDatabase chunkDatabase = new ChunkDatabase();
+  public List<ChunkData> chunkData = new List<ChunkData>();
 
-  public WorldData(WorldManager worldManager)
+  WorldManager worldManager;
+
+  private void Start()
+  {
+    worldManager = FindObjectOfType<WorldManager>();
+    chunkDatabase.chunkXPositions = new List<float>();
+    chunkDatabase.chunkZPositions = new List<float>();
+  }
+
+  public void SaveData()
   {
     generatedPerlinOffset = worldManager.chunkPerlinOffsets;
     foreach (KeyValuePair<Vector3, ChunkGenerator> chunk in worldManager.chunkTable)
     {
       chunkDatabase.chunkXPositions.Add(chunk.Key.x);
       chunkDatabase.chunkZPositions.Add(chunk.Key.z);
-      chunkDatabase.chunkGenerators.Add(chunk.Value);
     }
     chunkData = worldManager.chunksData;
   }
@@ -31,11 +39,11 @@ public class WorldData : MonoBehaviour
   //   return false;
   // }
 
-  public struct ChunkDatabase
+  [System.Serializable]
+  public class ChunkDatabase
   {
     public List<float> chunkXPositions;
     public List<float> chunkZPositions;
-    public List<ChunkGenerator> chunkGenerators;
   }
 
   // public ChunkData GetChunkDataByVector(Vector3 chunkPos)

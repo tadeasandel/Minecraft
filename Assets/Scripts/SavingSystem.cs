@@ -7,14 +7,14 @@ public class SavingSystem : MonoBehaviour
 {
   string saveFileName = "gamedata.sav";
 
-  public void SaveGame(WorldData worldData, PlayerData playerData)
+  public void SaveGame()
   {
     string path = GetDataPath();
     using (FileStream stream = new FileStream(path, FileMode.Create))
     {
       BinaryFormatter formatter = new BinaryFormatter();
-      GameData gameData = new GameData(worldData, playerData);
-      formatter.Serialize(stream, gameData);
+      PlayerData playerData = FindObjectOfType<PlayerData>();
+      formatter.Serialize(stream, playerData);
     }
   }
 

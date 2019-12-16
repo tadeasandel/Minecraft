@@ -2,8 +2,16 @@ using UnityEngine;
 
 public class GameData : MonoBehaviour
 {
-  WorldData worldData;
-  PlayerData playerData;
+  public WorldData worldData;
+  public PlayerData playerData;
+  SavingSystem savingSystem;
+
+  private void Start()
+  {
+    savingSystem = FindObjectOfType<SavingSystem>();
+    worldData = FindObjectOfType<WorldData>();
+    playerData = FindObjectOfType<PlayerData>();
+  }
 
   public GameData(WorldData worldData, PlayerData playerData)
   {
@@ -11,5 +19,13 @@ public class GameData : MonoBehaviour
     this.playerData = playerData;
   }
 
-  
+  private void Update()
+  {
+    if (Input.GetKeyDown(KeyCode.S))
+    {
+      worldData.SaveData();
+      playerData.SaveData();
+      savingSystem.SaveGame();
+    }
+  }
 }

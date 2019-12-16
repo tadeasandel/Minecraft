@@ -34,20 +34,7 @@ public class WorldManager : MonoBehaviour
     chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(999f, 99999f);
     chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(999f, 99999f);
     FillAreas();
-    // chunkTable.Add(new Vector3(0, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(1, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(2, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(3, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(4, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(5, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(6, 0, 0), new ChunkGenerator());
-    // chunkTable.Add(new Vector3(7, 0, 0), new ChunkGenerator());
-    // foreach (KeyValuePair<Vector3, ChunkGenerator> chunkzz in chunkTable)
-    // {
-    //   print(chunkzz.Key + " " + chunkzz.Value);
-    // }
     CreateChunkGenerators();
-    worldData = new WorldData(this);
   }
 
   private void FillAreas()
@@ -176,8 +163,8 @@ public class WorldManager : MonoBehaviour
       chunkTable.Add(chunkPos, newChunk);
       chunkPositions.Add(chunkPos);
       newChunk.SetChunkSetup();
-      newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
       newChunk.SetBoxCollider();
+      newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
       ChunkData chunkData = new ChunkData(newChunk);
       chunksData.Add(chunkData);
     }
@@ -261,7 +248,7 @@ public class WorldManager : MonoBehaviour
 
   private ChunkPerlinOffsets GetPerlinOffset(Vector3 chunkGenerator)
   {
-    ChunkPerlinOffsets newPerlinOffsets;
+    ChunkPerlinOffsets newPerlinOffsets = new ChunkPerlinOffsets();
     newPerlinOffsets.chunkOffsetX = chunkPerlinOffsets.chunkOffsetX + chunkGenerator.x / chunkDistance;
     newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z / chunkDistance;
     return newPerlinOffsets;
@@ -278,7 +265,7 @@ public struct Chunk
 }
 
 [System.Serializable]
-public struct ChunkPerlinOffsets
+public class ChunkPerlinOffsets
 {
   public float chunkOffsetX;
   public float chunkOffsetZ;

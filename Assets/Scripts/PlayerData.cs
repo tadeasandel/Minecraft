@@ -2,12 +2,27 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
-  float[] position;
 
-  public PlayerData(ObjectInteractionController objectInteractionController)
+  ObjectInteractionController objectInteractionController;
+  Positions positions = new Positions();
+
+  private void Start()
   {
-    position[0] = objectInteractionController.transform.position.x;
-    position[1] = objectInteractionController.transform.position.y;
-    position[2] = objectInteractionController.transform.position.z;
+    objectInteractionController = GetComponent<ObjectInteractionController>();
+  }
+
+  public void SaveData()
+  {
+    positions.xPosition = objectInteractionController.transform.position.x;
+    positions.yPosition = objectInteractionController.transform.position.y;
+    positions.ZPosition = objectInteractionController.transform.position.z;
+  }
+
+  [System.Serializable]
+  public class Positions
+  {
+    public float xPosition;
+    public float yPosition;
+    public float ZPosition;
   }
 }

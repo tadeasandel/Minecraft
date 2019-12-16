@@ -29,8 +29,6 @@ public class ChunkGenerator : MonoBehaviour
   [SerializeField] float distanceForDisabling;
   [SerializeField] float distanceForDestroying;
 
-  List<CubeData> cubesData = new List<CubeData>();
-
   public List<Cube> cubes = new List<Cube>();
 
   GameObject player;

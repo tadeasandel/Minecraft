@@ -3,20 +3,30 @@ using UnityEngine;
 
 public class ChunkData : MonoBehaviour
 {
-  public float[] cubePositionsX;
-  public float[] cubePositionsY;
-  public float[] cubePositionsZ;
-  List<CubeData> cubeData;
+  public CubeDataBase cubeDataBase = new CubeDataBase();
 
   public ChunkData(ChunkGenerator chunkGenerator)
   {
-    int i = 0;
-    foreach (var cubePosition in chunkGenerator.cubePositionTable)
+    cubeDataBase.cubePositionsX = new List<float>();
+    cubeDataBase.cubePositionsY = new List<float>();
+    cubeDataBase.cubePositionsZ = new List<float>();
+    // cubeDataBase.cubeType = new List<CubeType>();
+
+    foreach (KeyValuePair<Vector3, CubeEditor> cube in chunkGenerator.cubeEditorTable)
     {
-      cubePositionsX[i] = cubePosition.x;
-      cubePositionsY[i] = cubePosition.y;
-      cubePositionsZ[i] = cubePosition.z;
-      i++;
+      cubeDataBase.cubePositionsX.Add(cube.Key.x);
+      cubeDataBase.cubePositionsY.Add(cube.Key.y);
+      cubeDataBase.cubePositionsZ.Add(cube.Key.z);
+      // cubeDataBase.cubeType.Add(cube.Value.currentCubeType);
     }
+  }
+
+  [System.Serializable]
+  public class CubeDataBase
+  {
+    public List<float> cubePositionsX;
+    public List<float> cubePositionsY;
+    public List<float> cubePositionsZ;
+    // public List<CubeType> cubeType;
   }
 }
