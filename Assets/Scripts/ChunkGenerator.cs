@@ -74,7 +74,8 @@ public class ChunkGenerator : MonoBehaviour
       for (int i = 0; i < 4; i++)
       {
         Vector3 neighbourChunkPos = transform.position + directions[i];
-        ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
+        // ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
+        ChunkGenerator neighbourChunk = worldManager.GetChunkByVector(neighbourChunkPos).chunkGenerator;
         if (neighbourChunk == null) { continue; }
         cubeEditorPos = TransformCubeToNeighbourPos(cubeEditorPos);
         if (!neighbourChunk.cubeEditorTable.ContainsKey(cubeEditorPos)) { continue; }
@@ -102,7 +103,8 @@ public class ChunkGenerator : MonoBehaviour
     for (int i = 0; i < 4; i++)
     {
       Vector3 neighbourChunkPos = transform.position + directions[i];
-      ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
+      // ChunkGenerator neighbourChunk = worldManager.GetChunkGeneratorByVector(neighbourChunkPos);
+      ChunkGenerator neighbourChunk = worldManager.GetChunkByVector(neighbourChunkPos).chunkGenerator;
       if (neighbourChunk == null) { continue; }
       neighbourName = TransformCubeToNeighbourPos(neighbourName);
       if (!neighbourChunk.cubeEditorTable.ContainsKey(neighbourName)) { continue; }

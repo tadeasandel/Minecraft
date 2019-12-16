@@ -1839,6 +1839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
         type: 3}
+      propertyPath: chunkPositions.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2266105521604433359, guid: 4ff75b0d5e4bb8c4eaa8786661775e8d,
+        type: 3}
       propertyPath: chunkDistance
       value: 20
       objectReference: {fileID: 0}

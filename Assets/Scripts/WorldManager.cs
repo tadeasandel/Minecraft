@@ -27,6 +27,8 @@ public class WorldManager : MonoBehaviour
   public List<ChunkData> chunksData = new List<ChunkData>();
   public WorldData worldData;
 
+  public List<Chunk> chunks = new List<Chunk>();
+
   private void Start()
   {
     chunkPerlinOffsets.chunkOffsetX = UnityEngine.Random.Range(999f, 99999f);
@@ -94,92 +96,143 @@ public class WorldManager : MonoBehaviour
     {
       if (loadedArea == new Vector3(0, 0, 0)) { continue; }
       Vector3 neighbourChunkPos = centerChunkPos + loadedArea * chunkDistance;
-      if (!chunkTable.ContainsKey(neighbourChunkPos))
+      if (!ContainsChunkVector(neighbourChunkPos))
       {
+        print("no chunk to enable - creating");
         CreateChunk(neighbourChunkPos);
       }
       else
       {
+        print("enabling a chunk at pos " + neighbourChunkPos);
         EnableChunk(neighbourChunkPos);
       }
+      // if (!chunkTable.ContainsKey(neighbourChunkPos))
+      // {
+      //   CreateChunk(neighbourChunkPos);
+      // }
+      // else
+      // {
+      //   EnableChunk(neighbourChunkPos);
+      // }
     }
     foreach (Vector3 disableArea in disabledChunkArea)
     {
       Vector3 disableChunkPos = centerChunkPos + disableArea * chunkDistance;
-      if (chunkTable.ContainsKey(disableChunkPos))
+      if (ContainsChunkVector(disableChunkPos))
       {
         DisableChunk(disableChunkPos);
       }
+      // if (chunkTable.ContainsKey(disableChunkPos))
+      // {
+      //   DisableChunk(disableChunkPos);
+      // }
     }
     foreach (Vector3 destroyArea in destroyedChunkArea)
     {
       Vector3 destroyChunkPos = centerChunkPos + destroyArea * chunkDistance;
-      if (chunkTable.ContainsKey(destroyChunkPos))
+      if (ContainsChunkVector(destroyChunkPos))
       {
         DestroyChunk(destroyChunkPos);
       }
+      // if (chunkTable.ContainsKey(destroyChunkPos))
+      // {
+      //   DestroyChunk(destroyChunkPos);
+      // }
     }
   }
 
   private void CreateChunk(Vector3 chunkPos)
   {
-    if (worldData.ContainsChunkByVector(chunkPos)) 
-    {
-      LoadChunkBydata(chunkPos);
-    }
+    // if (worldData.ContainsChunkByVector(chunkPos))
+    // {
+    //   LoadChunkBydata(chunkPos);
+    // }
+    print("creating chunk");
     ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     newChunk.UpdateName();
-    if (!chunkTable.ContainsKey(chunkPos))
-    {
-      chunkTable.Add(chunkPos, newChunk);
-      chunkPositions.Add(chunkPos);
-      newChunk.SetChunkSetup();
-      newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
-      newChunk.SetBoxCollider();
-      ChunkData chunkData = new ChunkData(newChunk);
-      chunksData.Add(chunkData);
-    }
+    Chunk newChunkData = new Chunk();
+    newChunkData.chunkGenerator = newChunk;
+    newChunkData.key = newChunk.name;
+    newChunkData.position = chunkPos;
+    newChunkData.chunkGenerator.SetChunkSetup();
+    newChunkData.offsets = GetPerlinOffset(chunkPos);
+    newChunkData.chunkGenerator.GenerateChunk(newChunkData.offsets);
+    newChunkData.chunkGenerator.SetBoxCollider();
+    chunks.Add(newChunkData);
+    // if (!chunkTable.ContainsKey(chunkPos))
+    // {
+    //   chunkTable.Add(chunkPos, newChunk);
+    //   chunkPositions.Add(chunkPos);
+    //   newChunk.SetChunkSetup();
+    //   newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
+    //   newChunk.SetBoxCollider();
+    //   ChunkData chunkData = new ChunkData(newChunk);
+    //   chunksData.Add(chunkData);
+    // }
   }
 
-  private void LoadChunkBydata(Vector3 chunkPos)
+  public bool ContainsChunkVector(Vector3 chunkPos)
   {
-    
+    foreach (Chunk chunk in chunks)
+    {
+      if (chunk.position == chunkPos)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Chunk GetChunkByVector(Vector3 chunkPos)
+  {
+    foreach (Chunk chunk in chunks)
+    {
+      if (chunk.position == chunkPos)
+      {
+        return chunk;
+      }
+    }
+    print("no chunk found at " + chunkPos);
+    return chunks[0];
+  }
+
+  private void LoadChunkByVector(Vector3 chunkPos)
+  {
+
   }
 
   private void DestroyChunk(Vector3 chunkPos)
   {
-    Destroy(chunkTable[chunkPos].gameObject);
-    chunkTable.Remove(chunkPos);
-    chunkPositions.Remove(chunkPos);
+    Chunk temporaryChunk = GetChunkByVector(chunkPos);
+    Destroy(temporaryChunk.chunkGenerator.gameObject);
+    // Destroy(chunkTable[chunkPos].gameObject);
+    chunks.Remove(temporaryChunk);
+    // chunkTable.Remove(chunkPos);
+    // chunkPositions.Remove(chunkPos);
   }
 
   public void DisableChunk(Vector3 chunkPos)
   {
-    if (chunkTable.ContainsKey(chunkPos))
-    {
-      chunkTable[chunkPos].gameObject.SetActive(false);
-    }
+    GetChunkByVector(chunkPos).chunkGenerator.gameObject.SetActive(false);
   }
 
   private void EnableChunk(Vector3 chunkPos)
   {
-    if (chunkTable.ContainsKey(chunkPos))
-    {
-      chunkTable[chunkPos].gameObject.SetActive(true);
-    }
+    GetChunkByVector(chunkPos).chunkGenerator.gameObject.SetActive(true);
+    // chunkTable[chunkPos].gameObject.SetActive(true);
   }
 
-  public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
-  {
-    if (chunkTable.ContainsKey(chunkGenerator.transform.position))
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
+  // public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
+  // {
+  //   if (chunkTable.ContainsKey(chunkGenerator.transform.position))
+  //   {
+  //     return true;
+  //   }
+  //   else
+  //   {
+  //     return false;
+  //   }
+  // }
 
   public ChunkGenerator GetChunkGeneratorByVector(Vector3 chunkGeneratorName)
   {
@@ -200,6 +253,15 @@ public class WorldManager : MonoBehaviour
     newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z / chunkDistance;
     return newPerlinOffsets;
   }
+}
+
+[System.Serializable]
+public struct Chunk
+{
+  public string key;
+  public Vector3 position;
+  public ChunkGenerator chunkGenerator;
+  public ChunkPerlinOffsets offsets;
 }
 
 [System.Serializable]
