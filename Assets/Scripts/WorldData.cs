@@ -4,33 +4,38 @@ using UnityEngine;
 public class WorldData : MonoBehaviour
 {
   public ChunkPerlinOffsets generatedPerlinOffset;
-  public float[] chunkXPositions;
-  public float[] chunkZPositions;
+  ChunkDatabase chunkDatabase = new ChunkDatabase();
   public List<ChunkData> chunkData;
 
   public WorldData(WorldManager worldManager)
   {
     generatedPerlinOffset = worldManager.chunkPerlinOffsets;
-    int i = 0;
-    foreach (var chunkLocation in worldManager.chunkPositions)
+    foreach (KeyValuePair<Vector3, ChunkGenerator> chunk in worldManager.chunkTable)
     {
-      chunkXPositions[i] = chunkLocation.x;
-      chunkZPositions[i] = chunkLocation.z;
-      i++;
+      chunkDatabase.chunkXPositions.Add(chunk.Key.x);
+      chunkDatabase.chunkZPositions.Add(chunk.Key.z);
+      chunkDatabase.chunkGenerators.Add(chunk.Value);
     }
     chunkData = worldManager.chunksData;
   }
 
-  public bool ContainsChunkByVector(Vector3 chunkPosToCheck)
+  // public bool ContainsChunkByVector(Vector3 chunkPosToCheck)
+  // {
+  //   for (int i = 0; i < chunkXPositions.Length; i++)
+  //   {
+  //     if (chunkXPositions[i] == chunkPosToCheck.x && chunkZPositions[i] == chunkPosToCheck.z)
+  //     {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+
+  public struct ChunkDatabase
   {
-    for (int i = 0; i < chunkXPositions.Length; i++)
-    {
-      if (chunkXPositions[i] == chunkPosToCheck.x && chunkZPositions[i] == chunkPosToCheck.z)
-      {
-        return true;
-      }
-    }
-    return false;
+    public List<float> chunkXPositions;
+    public List<float> chunkZPositions;
+    public List<ChunkGenerator> chunkGenerators;
   }
 
   // public ChunkData GetChunkDataByVector(Vector3 chunkPos)

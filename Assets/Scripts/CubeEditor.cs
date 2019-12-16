@@ -14,7 +14,7 @@ public class CubeEditor : MonoBehaviour
 
   [SerializeField] int gridSize;
 
-  [SerializeField] CubeType currentCubeType;
+  public CubeType currentCubeType;
 
   ChunkGenerator cubeParent;
 
@@ -39,16 +39,16 @@ public class CubeEditor : MonoBehaviour
     SetOffset();
     SetCubeType(currentCubeType);
     ApplyCubeType();
-    SnapToGridPosition();
-    UpdateName();
-    AddCubeToParent();
+    // SnapToGridPosition();
+    // UpdateName();
+    // AddCubeToParent();
     ProcessNeighbours(true);
   }
 
-  private void AddCubeToParent()
-  {
-    cubeParent.AddNewCube(this);
-  }
+  // private void AddCubeToParent()
+  // {
+  //   cubeParent.CreateCube(this);
+  // }
 
   private void DestroyCube()
   {
@@ -204,8 +204,9 @@ public class CubeEditor : MonoBehaviour
 
   public void CreateBlock(string sideTag, CubeType cubeType)
   {
-    GameObject newCube = Instantiate(cubePrefab, transform.position + sideOffset[sideTag], Quaternion.identity, cubeParent.transform);
-    newCube.GetComponent<CubeEditor>().SetCubeType(cubeType);
+    // GameObject newCube = Instantiate(cubePrefab, transform.position + sideOffset[sideTag], Quaternion.identity, cubeParent.transform);
+    // newCube.GetComponent<CubeEditor>().SetCubeType(cubeType);
+    cubeParent.CreateCube(this, transform.position + sideOffset[sideTag], cubeType);
   }
 
   public void DestroyBlock()
