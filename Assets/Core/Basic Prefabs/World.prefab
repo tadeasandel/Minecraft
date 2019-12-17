@@ -46,13 +46,13 @@ MonoBehaviour:
   chunkGeneratorPrefab: {fileID: 838513650072041738, guid: b8a728583429bbf4c8051a9dfebeba24,
     type: 3}
   chunkDistance: 20
-  chunkOffsets:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 1, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: -1, y: 0, z: 1}
-  - {x: -1, y: 0, z: 0}
-  - {x: -1, y: 0, z: -1}
-  - {x: 0, y: 0, z: -1}
-  - {x: 1, y: 0, z: -1}
+  loadedChunkDistance: 1
+  disabledChunkDistance: 3
+  DestroyedChunkDistance: 6
+  loadedChunkArea: []
+  disabledChunkArea: []
+  destroyedChunkArea: []
+  chunkPerlinOffsets:
+    chunkOffsetX: 0
+    chunkOffsetZ: 0
+  currentCenterChunkPos: {x: 0, y: 0, z: 0}

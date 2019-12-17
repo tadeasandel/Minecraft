@@ -339,7 +339,6 @@ MonoBehaviour:
   - {x: -0.5, y: -0.5, z: -0.5}
   gridSize: 1
   currentCubeType: {fileID: 11400000, guid: fbd949e33a069274281175030cfcf75c, type: 2}
-  cubePrefab: {fileID: 4593941707474946968}
 --- !u!1 &4593941707901885227
 GameObject:
   m_ObjectHideFlags: 0

@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ff39f1425bc7b4aacf96c8bcad2d3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 10
+  cubeInteractDistance: 8
   tags:
   - FrontBlock
   - BackBlock
@@ -147,6 +147,7 @@ MonoBehaviour:
   - RightBlock
   - TopBlock
   - DownBlock
+  defaultToolType: {fileID: 11400000, guid: 1046bc4ac4eee7e40a4b7a2adf2c91e1, type: 2}
   blockDestroyTimer: 0.3
   blockPlaceTimer: 0.3
 --- !u!1 &7860629157314759626

@@ -48,6 +48,7 @@ public class SavingWrapper : MonoBehaviour
 
   public bool CanLoadGame()
   {
+    if (savingSystem == null) { savingSystem = GetComponent<SavingSystem>(); }
     if (savingSystem.CanLoadGame())
     {
       return true;

@@ -31,7 +31,11 @@ public class ObjectInteractionController : MonoBehaviour
   float miningCalculation;
   float miningTime;
 
-  struct Target
+  Target currentTarget;
+  public Target target = new Target();
+  CubePreview cubePreview;
+
+  public struct Target
   {
     public CubeEditor targetCube;
     public string sideTag;
@@ -40,14 +44,23 @@ public class ObjectInteractionController : MonoBehaviour
   private void Start()
   {
     itemTargetSwitcher = FindObjectOfType<ItemTargetSwitcher>();
+    cubePreview = FindObjectOfType<CubePreview>();
   }
 
-  Target target;
+  public CubeType GetCubeType()
+  {
+    return currentCubeType;
+  }
 
   void Update()
   {
     ProcessRaycast();
     UpdateTimers();
+  }
+
+  private void MoveCubePreview(Vector3 cubePreviewPos)
+  {
+    cubePreview.transform.position = cubePreviewPos;
   }
 
   public void LoadState(Vector3 playerPos)
@@ -65,6 +78,7 @@ public class ObjectInteractionController : MonoBehaviour
   {
     ActivateCubeType(cubeType);
     ActiveToolType(toolType);
+    cubePreview.ApplyCubeType();
   }
 
   private void ActiveToolType(ToolType toolType)
@@ -75,6 +89,18 @@ public class ObjectInteractionController : MonoBehaviour
       return;
     }
     currentToolType = toolType;
+  }
+
+  public bool IsUsingToolType()
+  {
+    if ((currentToolType == defaultToolType && currentCubeType == null) || (currentToolType != defaultToolType && currentCubeType == null))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
   public void SetPosition(Vector3 playerNewPos)
@@ -97,8 +123,9 @@ public class ObjectInteractionController : MonoBehaviour
 
   private void ProcessRaycast()
   {
-    if (!Input.GetButton("Fire1") || !Input.GetButton("Fire2")) { return; }
     RaycastHit hit;
+    if (currentTarget.targetCube != target.targetCube) { cubePreview.ApplyCubeType(); }
+    currentTarget.targetCube = target.targetCube;
     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, cubeInteractDistance))
     {
       ProcessCubeTargeting(hit);
@@ -175,6 +202,10 @@ public class ObjectInteractionController : MonoBehaviour
   private void VisualizeGrid(RaycastHit hit)
   {
     target.targetCube = hit.transform.GetComponentInParent<CubeEditor>();
+    if (target.targetCube != null && isInConstrutorMode)
+    {
+      MoveCubePreview(target.targetCube.GetVizualizationCenter(target.sideTag));
+    }
   }
 
   private void OnDrawGizmos()

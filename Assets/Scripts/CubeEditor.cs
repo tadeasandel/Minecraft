@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class CubeEditor : MonoBehaviour
 {
   Dictionary<string, Vector3> sideOffset = new Dictionary<string, Vector3>();
   public Dictionary<Vector3, GameObject> childTable = new Dictionary<Vector3, GameObject>();
-  public List<GameObject> childLocations = new List<GameObject>();
 
   [SerializeField] Vector3[] verticles;
 
@@ -17,8 +15,6 @@ public class CubeEditor : MonoBehaviour
   public CubeType currentCubeType;
 
   ChunkGenerator cubeParent;
-
-  [SerializeField] GameObject cubePrefab;
 
   float toughness;
 
@@ -37,18 +33,9 @@ public class CubeEditor : MonoBehaviour
       cubeParent = GetComponentInParent<ChunkGenerator>();
     }
     SetOffset();
-    SetCubeType(currentCubeType);
     ApplyCubeType();
-    // SnapToGridPosition();
-    // UpdateName();
-    // AddCubeToParent();
     ProcessNeighbours(true);
   }
-
-  // private void AddCubeToParent()
-  // {
-  //   cubeParent.CreateCube(this);
-  // }
 
   private void DestroyCube()
   {
@@ -61,6 +48,7 @@ public class CubeEditor : MonoBehaviour
     {
       Vector3 neighbourCube = transform.position + directions[i];
       CubeEditor temporaryCubeEditor;
+      if (cubeParent == null) { print("getting parent"); cubeParent = GetComponentInParent<ChunkGenerator>(); }
       if (childTable.ContainsKey(directions[i]))
       {
         RevealTransform(childTable[directions[i]]);
@@ -95,7 +83,7 @@ public class CubeEditor : MonoBehaviour
     for (int i = 0; i < 6; i++)
     {
       Vector3 neighbourCube = transform.position + directions[i];
-      cubeParent = GetComponentInParent<ChunkGenerator>();
+      if (cubeParent == null) { print("getting parent"); cubeParent = GetComponentInParent<ChunkGenerator>(); }
       CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
       if (temporaryCubeEditor == null) { continue; }
       if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
@@ -163,7 +151,6 @@ public class CubeEditor : MonoBehaviour
       if (!childTable.ContainsKey(directions[i]))
       {
         childTable.Add(directions[i], transform.GetChild(i).gameObject);
-        childLocations.Add(transform.GetChild(i).gameObject);
       }
     }
   }
@@ -177,7 +164,7 @@ public class CubeEditor : MonoBehaviour
   {
     if (transform.name != transform.position.ToString())
     {
-      transform.name = transform.position.ToString();
+      transform.name = currentCubeType.cubeTypeName + " " + transform.position.ToString();
     }
   }
 
@@ -197,6 +184,11 @@ public class CubeEditor : MonoBehaviour
     DrawLineWithIndexes(sideTag, 7, 4);
   }
 
+  public Vector3 GetVizualizationCenter(string sideTag)
+  {
+    return transform.position + sideOffset[sideTag];
+  }
+
   private void DrawLineWithIndexes(string sideTag, int firstIndex, int secondIndex)
   {
     Gizmos.DrawLine(transform.position + verticles[firstIndex] + sideOffset[sideTag], transform.position + verticles[secondIndex] + sideOffset[sideTag]);
@@ -204,8 +196,6 @@ public class CubeEditor : MonoBehaviour
 
   public void CreateBlock(string sideTag, CubeType cubeType)
   {
-    // GameObject newCube = Instantiate(cubePrefab, transform.position + sideOffset[sideTag], Quaternion.identity, cubeParent.transform);
-    // newCube.GetComponent<CubeEditor>().SetCubeType(cubeType);
     cubeParent.CreateCube(this, transform.position + sideOffset[sideTag], cubeType);
   }
 
