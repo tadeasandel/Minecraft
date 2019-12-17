@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ObjectInteractionController : MonoBehaviour
 {
-
   [SerializeField] float maxDistance;
 
   [SerializeField] string[] tags;
@@ -51,6 +50,11 @@ public class ObjectInteractionController : MonoBehaviour
     UpdateTimers();
   }
 
+  public void LoadState(Vector3 playerPos)
+  {
+    SetPosition(playerPos);
+  }
+
   private void UpdateTimers()
   {
     timeSincePlacedBlock += Time.deltaTime;
@@ -71,6 +75,11 @@ public class ObjectInteractionController : MonoBehaviour
       return;
     }
     currentToolType = toolType;
+  }
+
+  public void SetPosition(Vector3 playerNewPos)
+  {
+    GetComponent<PlayerMovement>().MoveTo(playerNewPos);
   }
 
   private void ActivateCubeType(CubeType cubeType)

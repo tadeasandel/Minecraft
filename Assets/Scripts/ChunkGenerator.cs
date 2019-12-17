@@ -33,6 +33,8 @@ public class ChunkGenerator : MonoBehaviour
 
   GameObject player;
 
+  public bool isDisabled;
+
   // private void Update()
   // {
   //   if (DistanceToPlayer() > distanceForDestroying)
@@ -44,6 +46,16 @@ public class ChunkGenerator : MonoBehaviour
   //     worldManager.DisableChunk(transform.position);
   //   }
   // }
+
+  public bool IsDisabled()
+  {
+    return isDisabled;
+  }
+
+  public void SetIsDisabled(bool isBeingDisabled)
+  {
+    isDisabled = isBeingDisabled;
+  }
 
   private void Awake()
   {
@@ -232,6 +244,16 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  public void GenerateLoadedChunk(WorldData.ChunkData chunkData)
+  {
+    for (int i = 0; i < chunkData.cubePositionsX.Count; i++)
+    {
+      Vector3 cubePos = new Vector3(chunkData.cubePositionsX[i], chunkData.cubePositionsY[i], chunkData.cubePositionsZ[i]);
+      CubeType cubeType = ProcessCubeByName(chunkData.cubeTypeNames[i]);
+      CreateCube(basicCubePrefab, cubePos, cubeType);
+    }
+  }
+
   public bool ContainsCubeVector(Vector3 cubePos)
   {
     foreach (Cube cube in cubes)
@@ -257,17 +279,25 @@ public class ChunkGenerator : MonoBehaviour
     return cubes[0];
   }
 
-  private CubeType ProcessCubeType(int y)
+  private CubeType ProcessCubeType(int cubeDepth)
   {
     foreach (GenerationSetup generationSetup in generationSetups)
     {
-      if (y >= generationSetup.minGenerationDepth && y <= generationSetup.maxGenerationDepth)
+      if (cubeDepth >= generationSetup.minGenerationDepth && cubeDepth <= generationSetup.maxGenerationDepth)
       {
         return generationSetup.generatedCubeType;
       }
-      else
+    }
+    return generationSetups[3].generatedCubeType;
+  }
+
+  private CubeType ProcessCubeByName(string name)
+  {
+    foreach (GenerationSetup generationSetup in generationSetups)
+    {
+      if (generationSetup.cubeTypeName == name)
       {
-        continue;
+        return generationSetup.generatedCubeType;
       }
     }
     return generationSetups[3].generatedCubeType;
@@ -317,5 +347,6 @@ public class GenerationSetup
   public CubeType generatedCubeType;
   public float maxGenerationDepth;
   public float minGenerationDepth;
+  public string cubeTypeName;
 }
 

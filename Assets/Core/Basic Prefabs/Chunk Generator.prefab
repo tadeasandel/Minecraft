@@ -53,18 +53,22 @@ MonoBehaviour:
       type: 2}
     maxGenerationDepth: 20
     minGenerationDepth: 17
+    cubeTypeName: Snow
   - generatedCubeType: {fileID: 11400000, guid: 5536799a9eda7484988d5356e82a0e30,
       type: 2}
     maxGenerationDepth: 16
     minGenerationDepth: 8
+    cubeTypeName: Dirt
   - generatedCubeType: {fileID: 11400000, guid: 92b96ab8c5353aa4088b646fb54da071,
       type: 2}
     maxGenerationDepth: 7
     minGenerationDepth: 4
+    cubeTypeName: Stone
   - generatedCubeType: {fileID: 11400000, guid: 8f65b8545a10ff042adf367ec2aa8c13,
       type: 2}
     maxGenerationDepth: 3
     minGenerationDepth: 0
+    cubeTypeName: Bedrock
   directions:
   - {x: 20, y: 0, z: 0}
   - {x: -20, y: 0, z: 0}
@@ -72,6 +76,8 @@ MonoBehaviour:
   - {x: 0, y: 0, z: -20}
   distanceForDisabling: 60
   distanceForDestroying: 100
+  cubes: []
+  isDisabled: 0
 --- !u!65 &8249253710442097541
 BoxCollider:
   m_ObjectHideFlags: 0

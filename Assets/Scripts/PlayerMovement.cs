@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,8 +76,11 @@ public class PlayerMovement : MonoBehaviour
 
     controller.Move(velocity * Time.deltaTime);
   }
-  private void OnDrawGizmos()
+
+  public void MoveTo(Vector3 playerNewPos)
   {
-    Gizmos.DrawSphere(groundCheck.position, groundDistance);
+    controller.enabled = false;
+    transform.position = playerNewPos;
+    controller.enabled = true;
   }
 }

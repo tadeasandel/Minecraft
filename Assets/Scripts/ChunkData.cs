@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class ChunkData : MonoBehaviour
 {
-  public CubeDataBase cubeDataBase = new CubeDataBase();
+  CubeDataBase cubeDataBase = new CubeDataBase();
 
   public ChunkData(ChunkGenerator chunkGenerator)
   {
@@ -21,12 +22,17 @@ public class ChunkData : MonoBehaviour
     }
   }
 
-  [System.Serializable]
-  public class CubeDataBase
+  public CubeDataBase FormCubeData()
   {
-    public List<float> cubePositionsX;
-    public List<float> cubePositionsY;
-    public List<float> cubePositionsZ;
-    // public List<CubeType> cubeType;
+    return cubeDataBase;
   }
+
+}
+[System.Serializable]
+public class CubeDataBase
+{
+  public List<float> cubePositionsX;
+  public List<float> cubePositionsY;
+  public List<float> cubePositionsZ;
+  // public List<CubeType> cubeType;
 }

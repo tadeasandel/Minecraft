@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Snow
   m_EditorClassIdentifier: 
   toughness: 10
-  cubeTypeName: 
+  cubeTypeName: Snow
   materials:
   - {fileID: 2100000, guid: dc608ee456c0f2a448bca8e1d23126bb, type: 2}
   - {fileID: 2100000, guid: 495dc87f2e698ec45884ea4be92752c1, type: 2}
