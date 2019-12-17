@@ -24,7 +24,6 @@ public class GameData
       WorldData.ChunkData chunkData = new WorldData.ChunkData();
       chunkData.chunkXPosition = chunk.Key.x;
       chunkData.chunkZPosition = chunk.Key.z;
-      chunkData.isDisabled = chunk.Value.IsDisabled();
       foreach (KeyValuePair<Vector3, CubeEditor> cube in chunk.Value.cubeEditorTable)
       {
         chunkData.cubePositionsX.Add(cube.Key.x);
@@ -34,6 +33,12 @@ public class GameData
       }
       worldData.chunkData.Add(chunkData);
     }
+
+    foreach (KeyValuePair<Vector3, WorldData.ChunkData> chunk in worldManager.destroyedChunkData)
+    {
+      worldData.destroyedChunkData.Add(chunk.Value);
+    }
+
   }
 
   private void ProcessPlayerData(ObjectInteractionController objectInteractionController)
@@ -55,6 +60,7 @@ public class PlayerData
 public class WorldData
 {
   public List<ChunkData> chunkData = new List<ChunkData>();
+  public List<ChunkData> destroyedChunkData = new List<ChunkData>();
   public float chunkPerlinOffsetX;
   public float chunkPerlinOffsetZ;
   public float centralChunkX;
@@ -65,7 +71,6 @@ public class WorldData
   {
     public float chunkXPosition;
     public float chunkZPosition;
-    public bool isDisabled;
     public List<float> cubePositionsX = new List<float>();
     public List<float> cubePositionsY = new List<float>();
     public List<float> cubePositionsZ = new List<float>();

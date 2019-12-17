@@ -11,6 +11,7 @@ public class WorldManager : MonoBehaviour
 
   public Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
   public List<Vector3> chunkPositions = new List<Vector3>();
+  public Dictionary<Vector3, WorldData.ChunkData> destroyedChunkData = new Dictionary<Vector3, WorldData.ChunkData>();
 
   [SerializeField] int loadedChunkDistance;
   [SerializeField] int disabledChunkDistance;
@@ -105,6 +106,11 @@ public class WorldManager : MonoBehaviour
     chunkPerlinOffsets.chunkOffsetZ = worldData.chunkPerlinOffsetZ;
 
     chunkTable.Clear();
+    destroyedChunkData.Clear();
+    foreach (WorldData.ChunkData destroyedChunk in worldData.destroyedChunkData)
+    {
+      destroyedChunkData.Add(new Vector3(destroyedChunk.chunkXPosition, 0, destroyedChunk.chunkZPosition), destroyedChunk);
+    }
 
     foreach (WorldData.ChunkData chunk in worldData.chunkData)
     {
@@ -148,7 +154,11 @@ public class WorldManager : MonoBehaviour
       //   print("enabling a chunk at pos " + neighbourChunkPos);
       //   EnableChunk(neighbourChunkPos);
       // }
-      if (!chunkTable.ContainsKey(neighbourChunkPos))
+      if (destroyedChunkData.ContainsKey(neighbourChunkPos) && !chunkTable.ContainsKey(neighbourChunkPos))
+      {
+        RestoreChunk(neighbourChunkPos);
+      }
+      else if (!chunkTable.ContainsKey(neighbourChunkPos))
       {
         CreateChunk(neighbourChunkPos);
       }
@@ -181,6 +191,20 @@ public class WorldManager : MonoBehaviour
         DestroyChunk(destroyChunkPos);
       }
     }
+  }
+
+  private void RestoreChunk(Vector3 chunkPos)
+  {
+    ChunkGenerator restoredChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
+    restoredChunk.UpdateName();
+
+    print("restoring chunk from data");
+    chunkTable.Add(chunkPos, restoredChunk);
+    chunkPositions.Add(chunkPos);
+    restoredChunk.SetChunkSetup();
+    restoredChunk.SetBoxCollider();
+    restoredChunk.GenerateLoadedChunk(destroyedChunkData[chunkPos]);
+    destroyedChunkData.Remove(chunkPos);
   }
 
   private void CreateChunk(Vector3 chunkPos)
@@ -244,9 +268,29 @@ public class WorldManager : MonoBehaviour
   {
     // Chunk temporaryChunk = GetChunkByVector(chunkPos);
     // Destroy(temporaryChunk.chunkGenerator.gameObject);
+
+    WorldData.ChunkData destroyedChunk = new WorldData.ChunkData();
+
+    destroyedChunk.chunkXPosition = chunkPos.x;
+    destroyedChunk.chunkZPosition = chunkPos.z;
+
+    foreach (KeyValuePair<Vector3, CubeEditor> cubeData in chunkTable[chunkPos].cubeEditorTable)
+    {
+      destroyedChunk.cubePositionsX.Add(cubeData.Key.x);
+      destroyedChunk.cubePositionsY.Add(cubeData.Key.y);
+      destroyedChunk.cubePositionsZ.Add(cubeData.Key.z);
+      string cubeTypeName = chunkTable[chunkPos].ProcessCubeByName(cubeData.Value.GetCubeType().cubeTypeName).cubeTypeName;
+      destroyedChunk.cubeTypeNames.Add(cubeTypeName);
+    }
+
+    print("storing chunk with position " + chunkPos);
+    destroyedChunkData.Add(chunkPos, destroyedChunk);
+    print("stored chunk with position " + destroyedChunkData[chunkPos]);
+
+
     Destroy(chunkTable[chunkPos].gameObject);
     // chunks.Remove(temporaryChunk);
-    // chunkTable.Remove(chunkPos);
+    chunkTable.Remove(chunkPos);
     chunkPositions.Remove(chunkPos);
   }
 

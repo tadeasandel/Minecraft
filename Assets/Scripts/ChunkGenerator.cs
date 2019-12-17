@@ -71,6 +71,7 @@ public class ChunkGenerator : MonoBehaviour
   {
     if (other.CompareTag("Player"))
     {
+      if (worldManager == null) { return; }
       worldManager.RefreshChunks(transform.position);
     }
   }
@@ -291,7 +292,7 @@ public class ChunkGenerator : MonoBehaviour
     return generationSetups[3].generatedCubeType;
   }
 
-  private CubeType ProcessCubeByName(string name)
+  public CubeType ProcessCubeByName(string name)
   {
     foreach (GenerationSetup generationSetup in generationSetups)
     {
