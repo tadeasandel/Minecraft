@@ -53,15 +53,11 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveForward = transform.right * x;
     Vector3 moveRight = transform.forward * z;
 
-    if ((Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") > 0) || (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") < 0) || (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") < 0) || (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") > 0))
+    if ((x > 0 && z > 0) || (x < 0 && z < 0) || (x > 0 && z < 0) || (x < 0 && z > 0))
     {
       x /= doubleMoveReduction;
       z /= doubleMoveReduction;
       speed /= doubleMoveReduction;
-    }
-    if (Input.GetAxis("Vertical") < 0)
-    {
-
     }
 
     controller.Move(moveForward * speed * Time.deltaTime);

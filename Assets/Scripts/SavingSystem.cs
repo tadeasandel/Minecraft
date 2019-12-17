@@ -36,6 +36,17 @@ public class SavingSystem : MonoBehaviour
     }
   }
 
+  public void DeleteFile()
+  {
+    string path = GetDataPath(saveFileName);
+    if (!File.Exists(path))
+    {
+      return;
+    }
+    print("deleting " + path);
+    File.Delete(path);
+  }
+
   public bool CanLoadGame()
   {
     string path = GetDataPath(saveFileName);

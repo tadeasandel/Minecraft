@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ObjectInteractionController : MonoBehaviour
 {
-  [SerializeField] float maxDistance;
+  [SerializeField] float cubeInteractDistance;
 
   [SerializeField] string[] tags;
 
@@ -97,8 +97,9 @@ public class ObjectInteractionController : MonoBehaviour
 
   private void ProcessRaycast()
   {
+    if (!Input.GetButton("Fire1") || !Input.GetButton("Fire2")) { return; }
     RaycastHit hit;
-    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDistance))
+    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, cubeInteractDistance))
     {
       ProcessCubeTargeting(hit);
     }

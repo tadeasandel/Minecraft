@@ -10,7 +10,6 @@ public class WorldManager : MonoBehaviour
   [SerializeField] float chunkDistance;
 
   public Dictionary<Vector3, ChunkGenerator> chunkTable = new Dictionary<Vector3, ChunkGenerator>();
-  public List<Vector3> chunkPositions = new List<Vector3>();
   public Dictionary<Vector3, WorldData.ChunkData> destroyedChunkData = new Dictionary<Vector3, WorldData.ChunkData>();
 
   [SerializeField] int loadedChunkDistance;
@@ -24,10 +23,6 @@ public class WorldManager : MonoBehaviour
   public ChunkPerlinOffsets chunkPerlinOffsets;
 
   public Vector3 currentCenterChunkPos = new Vector3(0, 0, 0);
-
-  public List<CubeDataBase> chunksData = new List<CubeDataBase>();
-
-  public List<Chunk> chunks = new List<Chunk>();
 
   SavingWrapper savingWrapper;
 
@@ -129,7 +124,6 @@ public class WorldManager : MonoBehaviour
     if (!chunkTable.ContainsKey(chunkPos))
     {
       chunkTable.Add(chunkPos, newChunk);
-      chunkPositions.Add(chunkPos);
       newChunk.SetChunkSetup();
       newChunk.SetBoxCollider();
       newChunk.GenerateLoadedChunk(chunkData);
@@ -144,16 +138,6 @@ public class WorldManager : MonoBehaviour
     {
       if (loadedArea == new Vector3(0, 0, 0)) { continue; }
       Vector3 neighbourChunkPos = centerChunkPos + loadedArea * chunkDistance;
-      // if (!ContainsChunkVector(neighbourChunkPos))
-      // {
-      //   print("no chunk to enable - creating");
-      //   CreateChunk(neighbourChunkPos);
-      // }
-      // else
-      // {
-      //   print("enabling a chunk at pos " + neighbourChunkPos);
-      //   EnableChunk(neighbourChunkPos);
-      // }
       if (destroyedChunkData.ContainsKey(neighbourChunkPos) && !chunkTable.ContainsKey(neighbourChunkPos))
       {
         RestoreChunk(neighbourChunkPos);
@@ -170,10 +154,6 @@ public class WorldManager : MonoBehaviour
     foreach (Vector3 disableArea in disabledChunkArea)
     {
       Vector3 disableChunkPos = centerChunkPos + disableArea * chunkDistance;
-      // if (ContainsChunkVector(disableChunkPos))
-      // {
-      //   DisableChunk(disableChunkPos);
-      // }
       if (chunkTable.ContainsKey(disableChunkPos))
       {
         DisableChunk(disableChunkPos);
@@ -182,10 +162,6 @@ public class WorldManager : MonoBehaviour
     foreach (Vector3 destroyArea in destroyedChunkArea)
     {
       Vector3 destroyChunkPos = centerChunkPos + destroyArea * chunkDistance;
-      // if (ContainsChunkVector(destroyChunkPos))
-      // {
-      //   DestroyChunk(destroyChunkPos);
-      // }
       if (chunkTable.ContainsKey(destroyChunkPos))
       {
         DestroyChunk(destroyChunkPos);
@@ -198,9 +174,7 @@ public class WorldManager : MonoBehaviour
     ChunkGenerator restoredChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     restoredChunk.UpdateName();
 
-    print("restoring chunk from data");
     chunkTable.Add(chunkPos, restoredChunk);
-    chunkPositions.Add(chunkPos);
     restoredChunk.SetChunkSetup();
     restoredChunk.SetBoxCollider();
     restoredChunk.GenerateLoadedChunk(destroyedChunkData[chunkPos]);
@@ -209,54 +183,15 @@ public class WorldManager : MonoBehaviour
 
   private void CreateChunk(Vector3 chunkPos)
   {
-    // if (worldData.ContainsChunkByVector(chunkPos))
-    // {
-    //   LoadChunkBydata(chunkPos);
-    // }
     ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     newChunk.UpdateName();
-    // Chunk newChunkData = new Chunk();
-    // newChunkData.chunkGenerator = newChunk;
-    // newChunkData.key = newChunk.name;
-    // newChunkData.position = chunkPos;
-    // newChunkData.chunkGenerator.SetChunkSetup();
-    // newChunkData.offsets = GetPerlinOffset(chunkPos);
-    // newChunkData.chunkGenerator.GenerateChunk(newChunkData.offsets);
-    // newChunkData.chunkGenerator.SetBoxCollider();
-    // chunks.Add(newChunkData);
     if (!chunkTable.ContainsKey(chunkPos))
     {
       chunkTable.Add(chunkPos, newChunk);
-      chunkPositions.Add(chunkPos);
       newChunk.SetChunkSetup();
       newChunk.SetBoxCollider();
       newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
     }
-  }
-
-  public bool ContainsChunkVector(Vector3 chunkPos)
-  {
-    foreach (Chunk chunk in chunks)
-    {
-      if (chunk.position == chunkPos)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public Chunk GetChunkByVector(Vector3 chunkPos)
-  {
-    foreach (Chunk chunk in chunks)
-    {
-      if (chunk.position == chunkPos)
-      {
-        return chunk;
-      }
-    }
-    print("no chunk found at " + chunkPos);
-    return chunks[0];
   }
 
   private void LoadChunkByVector(Vector3 chunkPos)
@@ -266,9 +201,6 @@ public class WorldManager : MonoBehaviour
 
   private void DestroyChunk(Vector3 chunkPos)
   {
-    // Chunk temporaryChunk = GetChunkByVector(chunkPos);
-    // Destroy(temporaryChunk.chunkGenerator.gameObject);
-
     WorldData.ChunkData destroyedChunk = new WorldData.ChunkData();
 
     destroyedChunk.chunkXPosition = chunkPos.x;
@@ -283,34 +215,20 @@ public class WorldManager : MonoBehaviour
       destroyedChunk.cubeTypeNames.Add(cubeTypeName);
     }
 
-    print("storing chunk with position " + chunkPos);
     destroyedChunkData.Add(chunkPos, destroyedChunk);
-    print("stored chunk with position " + destroyedChunkData[chunkPos]);
-
 
     Destroy(chunkTable[chunkPos].gameObject);
-    // chunks.Remove(temporaryChunk);
     chunkTable.Remove(chunkPos);
-    chunkPositions.Remove(chunkPos);
   }
 
   public void DisableChunk(Vector3 chunkPos)
   {
-    // GetChunkGeneratorByVector(chunkPos).gameObject.SetActive(false);
     chunkTable[chunkPos].gameObject.SetActive(false);
   }
 
   private void EnableChunk(Vector3 chunkPos)
   {
-    // GetChunkByVector(chunkPos).chunkGenerator.gameObject.SetActive(true);
-    if (chunkTable[chunkPos].gameObject == null)
-    {
-      print("chunk does not exist, loading it from data");
-    }
-    else
-    {
-      chunkTable[chunkPos].gameObject.SetActive(true);
-    }
+    chunkTable[chunkPos].gameObject.SetActive(true);
   }
 
   public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
@@ -344,15 +262,6 @@ public class WorldManager : MonoBehaviour
     newPerlinOffsets.chunkOffsetZ = chunkPerlinOffsets.chunkOffsetZ + chunkGenerator.z / chunkDistance;
     return newPerlinOffsets;
   }
-}
-
-[System.Serializable]
-public struct Chunk
-{
-  public string key;
-  public Vector3 position;
-  public ChunkGenerator chunkGenerator;
-  public ChunkPerlinOffsets offsets;
 }
 
 [System.Serializable]
