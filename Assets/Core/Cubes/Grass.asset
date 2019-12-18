@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e2afae58656d3c4083023d7efdd4551, type: 3}
-  m_Name: Dirt
+  m_Name: Grass
   m_EditorClassIdentifier: 
   toughness: 10
   cubeTypeName: Dirt
@@ -21,10 +21,3 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 35273d27c5994b442a91d9dd52890ab9, type: 2}
   - {fileID: 2100000, guid: d04ccea8f5884a6438d9287cd49ebcfa, type: 2}
   - {fileID: 2100000, guid: a37c5fbb1d295054ea5828a93bb9beca, type: 2}
-  childNames:
-  - 0.0, 0.0, 1.0
-  - 0.0, 0.0, -1.0
-  - -1.0, 0.0, 0.0
-  - 1.0, 0.0, 0.0
-  - 0.0, 1.0, 0.0
-  - 0.0, -1.0, 0.0
