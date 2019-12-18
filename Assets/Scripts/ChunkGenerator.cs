@@ -42,6 +42,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  // this gets cube by Vector
   public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorPos)
   {
     if (cubeEditorTable.ContainsKey(cubeEditorPos))

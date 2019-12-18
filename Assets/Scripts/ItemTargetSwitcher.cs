@@ -64,6 +64,30 @@ public class ItemTargetSwitcher : MonoBehaviour
         currentItem--;
       }
     }
+    if (Input.GetKeyDown(KeyCode.Alpha1))
+    {
+      currentItem = 0;
+    }
+    if (Input.GetKeyDown(KeyCode.Alpha2))
+    {
+      currentItem = 1;
+    }
+    if (Input.GetKeyDown(KeyCode.Alpha3))
+    {
+      currentItem = 2;
+    }
+    if (Input.GetKeyDown(KeyCode.Alpha4))
+    {
+      currentItem = 3;
+    }
+    if (Input.GetKeyDown(KeyCode.Alpha5))
+    {
+      currentItem = 4;
+    }
+    if (Input.GetKeyDown(KeyCode.Alpha6))
+    {
+      currentItem = 5;
+    }
   }
 
   public CubeType GetCubeType()
