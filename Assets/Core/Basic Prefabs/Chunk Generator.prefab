@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDepth: 20
   perlinScale: 1000
+  generationSeconds: 0.00000001
   basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
-  cubePositionTable: []
   generationSetups:
   - generatedCubeType: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
       type: 2}
@@ -74,10 +74,7 @@ MonoBehaviour:
   - {x: -20, y: 0, z: 0}
   - {x: 0, y: 0, z: 20}
   - {x: 0, y: 0, z: -20}
-  distanceForDisabling: 60
-  distanceForDestroying: 100
-  cubes: []
-  isDisabled: 0
+  isLoaded: 0
 --- !u!65 &8249253710442097541
 BoxCollider:
   m_ObjectHideFlags: 0

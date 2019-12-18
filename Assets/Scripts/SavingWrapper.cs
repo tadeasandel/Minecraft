@@ -13,7 +13,6 @@ public class SavingWrapper : MonoBehaviour
   {
     savingSystem = GetComponent<SavingSystem>();
     WorldManager worldManager = FindObjectOfType<WorldManager>();
-    ObjectInteractionController objectInteractionController = FindObjectOfType<ObjectInteractionController>();
   }
 
   private void Update()
@@ -21,7 +20,7 @@ public class SavingWrapper : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.P))
     {
       if (worldManager == null) { worldManager = FindObjectOfType<WorldManager>(); }
-      if (objectInteractionController == null) { objectInteractionController = FindObjectOfType<ObjectInteractionController>(); }
+      objectInteractionController = FindObjectOfType<ObjectInteractionController>();
       savingSystem.SaveGame(worldManager, objectInteractionController);
     }
     if (Input.GetKeyDown(KeyCode.L))
@@ -39,11 +38,9 @@ public class SavingWrapper : MonoBehaviour
     GameData gameData = savingSystem.LoadGame();
     if (gameData == null) { print("no file found"); return; }
     if (worldManager == null) { worldManager = FindObjectOfType<WorldManager>(); }
-    if (objectInteractionController == null) { objectInteractionController = FindObjectOfType<ObjectInteractionController>(); }
 
     Vector3 playerNewPos = new Vector3(gameData.playerData.playerXPosition, gameData.playerData.playerYPosition, gameData.playerData.playerZPosition);
-    objectInteractionController.LoadState(playerNewPos);
-    worldManager.LoadGame(gameData.worldData);
+    worldManager.LoadGame(gameData.worldData, playerNewPos);
   }
 
   public bool CanLoadGame()

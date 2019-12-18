@@ -11,6 +11,8 @@ public class ChunkGenerator : MonoBehaviour
 
   [SerializeField] float perlinScale = 0.1f;
 
+  [SerializeField] float generationSeconds;
+
   [SerializeField] CubeEditor basicCubePrefab;
 
   WorldManager worldManager;
@@ -24,6 +26,7 @@ public class ChunkGenerator : MonoBehaviour
   public GenerationSetup[] generationSetups;
 
   [SerializeField] Vector3[] directions;
+  public bool isLoaded = false;
 
   private void Awake()
   {
@@ -147,7 +150,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
-  public void GenerateChunk(ChunkPerlinOffsets chunkPerlinOffsets)
+  public IEnumerator GenerateChunk(ChunkPerlinOffsets chunkPerlinOffsets)
   {
     perlinOffsetX = chunkPerlinOffsets.chunkOffsetX;
     perlinOffsetZ = chunkPerlinOffsets.chunkOffsetZ;
@@ -166,17 +169,21 @@ public class ChunkGenerator : MonoBehaviour
           }
         }
       }
+      yield return new WaitForSeconds(generationSeconds);
     }
+    isLoaded = true;
   }
 
-  public void GenerateLoadedChunk(WorldData.ChunkData chunkData)
+  public IEnumerator GenerateLoadedChunk(WorldData.ChunkData chunkData)
   {
     for (int i = 0; i < chunkData.cubePositionsX.Count; i++)
     {
       Vector3 cubePos = new Vector3(chunkData.cubePositionsX[i], chunkData.cubePositionsY[i], chunkData.cubePositionsZ[i]);
       CubeType cubeType = ProcessCubeByName(chunkData.cubeTypeNames[i]);
       CreateCube(basicCubePrefab, cubePos, cubeType);
+      yield return new WaitForSeconds(generationSeconds);
     }
+    isLoaded = true;
   }
 
   private CubeType ProcessCubeType(int cubeDepth)

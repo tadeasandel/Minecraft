@@ -56,3 +56,5 @@ MonoBehaviour:
     chunkOffsetX: 0
     chunkOffsetZ: 0
   currentCenterChunkPos: {x: 0, y: 0, z: 0}
+  playerPrefab: {fileID: 7860629156409474659, guid: f7d0d76d614afd74a93a271342029475,
+    type: 3}

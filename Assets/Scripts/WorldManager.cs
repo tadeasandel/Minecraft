@@ -26,11 +26,49 @@ public class WorldManager : MonoBehaviour
 
   SavingWrapper savingWrapper;
 
+  Vector3 playerSpawnPos;
+
+  Vector3 centralChunkPos;
+
+  [SerializeField] GameObject playerPrefab;
+  bool isGameLoaded = false;
+  bool isPlayerSpawned = false;
+  [SerializeField] GameObject[] objectsToDisable;
+  [SerializeField] GameObject[] objectsToEnable;
+
   private void Start()
   {
     savingWrapper = FindObjectOfType<SavingWrapper>();
     FillAreas();
     ProcessLoading();
+  }
+
+  private void Update()
+  {
+    if (!isGameLoaded)
+    {
+      foreach (KeyValuePair<Vector3, ChunkGenerator> chunk in chunkTable)
+      {
+        if (!chunk.Value.isLoaded)
+        {
+          return;
+        }
+      }
+      isGameLoaded = true;
+    }
+    if (!isPlayerSpawned && isGameLoaded)
+    {
+      SpawnPlayer(playerSpawnPos);
+      isPlayerSpawned = true;
+      foreach (GameObject objectToDisable in objectsToDisable)
+      {
+        objectToDisable.SetActive(false);
+      }
+      foreach (GameObject objectToEnable in objectsToEnable)
+      {
+        objectToEnable.SetActive(true);
+      }
+    }
   }
 
   private void ProcessLoading()
@@ -45,6 +83,11 @@ public class WorldManager : MonoBehaviour
       chunkPerlinOffsets.chunkOffsetZ = UnityEngine.Random.Range(999f, 99999f);
       CreateChunkGenerators();
     }
+  }
+
+  private void SpawnPlayer(Vector3 playerPos)
+  {
+    Instantiate(playerPrefab, playerPos, Quaternion.identity);
   }
 
   private void FillAreas()
@@ -91,17 +134,23 @@ public class WorldManager : MonoBehaviour
     foreach (Vector3 loadedArea in loadedChunkArea)
     {
       Vector3 newChunkLocation = transform.position + loadedArea * chunkDistance;
-      CreateChunk(newChunkLocation);
+      StartCoroutine(CreateChunk(newChunkLocation));
     }
+    playerSpawnPos = new Vector3(0, 20, 0); ;
   }
 
-  public void LoadGame(WorldData worldData)
+  public void LoadGame(WorldData worldData, Vector3 playerPos)
   {
     chunkPerlinOffsets.chunkOffsetX = worldData.chunkPerlinOffsetX;
     chunkPerlinOffsets.chunkOffsetZ = worldData.chunkPerlinOffsetZ;
+    playerSpawnPos = playerPos;
+    objectsToDisable[0].transform.position = new Vector3(playerPos.x, 60, playerPos.z);
 
     chunkTable.Clear();
     destroyedChunkData.Clear();
+    centralChunkPos = new Vector3(worldData.centralChunkX, 0, worldData.centralChunkZ);
+    // CreateChunkByData(centralChunkPos);
+
     foreach (WorldData.ChunkData destroyedChunk in worldData.destroyedChunkData)
     {
       destroyedChunkData.Add(new Vector3(destroyedChunk.chunkXPosition, 0, destroyedChunk.chunkZPosition), destroyedChunk);
@@ -110,12 +159,12 @@ public class WorldManager : MonoBehaviour
     foreach (WorldData.ChunkData chunk in worldData.chunkData)
     {
       Vector3 chunkPos = new Vector3(chunk.chunkXPosition, 0, chunk.chunkZPosition);
-      CreateChunkByData(chunkPos, chunk);
+      StartCoroutine(CreateChunkByData(chunkPos, chunk));
     }
-    RefreshChunks(new Vector3(worldData.centralChunkX, 0, worldData.centralChunkZ));
+    RefreshChunks(new Vector3(centralChunkPos.x, 0, centralChunkPos.z));
   }
 
-  public void CreateChunkByData(Vector3 chunkPos, WorldData.ChunkData chunkData)
+  public IEnumerator CreateChunkByData(Vector3 chunkPos, WorldData.ChunkData chunkData)
   {
     ChunkGenerator newChunk = new ChunkGenerator();
     newChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
@@ -126,7 +175,8 @@ public class WorldManager : MonoBehaviour
       chunkTable.Add(chunkPos, newChunk);
       newChunk.SetChunkSetup();
       newChunk.SetBoxCollider();
-      newChunk.GenerateLoadedChunk(chunkData);
+      yield return newChunk.GenerateLoadedChunk(chunkData);
+      yield return null;
     }
   }
 
@@ -140,15 +190,15 @@ public class WorldManager : MonoBehaviour
       Vector3 neighbourChunkPos = centerChunkPos + loadedArea * chunkDistance;
       if (destroyedChunkData.ContainsKey(neighbourChunkPos) && !chunkTable.ContainsKey(neighbourChunkPos))
       {
-        RestoreChunk(neighbourChunkPos);
+        StartCoroutine(RestoreChunk(neighbourChunkPos));
       }
       else if (!chunkTable.ContainsKey(neighbourChunkPos))
       {
-        CreateChunk(neighbourChunkPos);
+        StartCoroutine(CreateChunk(neighbourChunkPos));
       }
       else
       {
-        EnableChunk(neighbourChunkPos);
+        StartCoroutine(EnableChunk(neighbourChunkPos));
       }
     }
     foreach (Vector3 disableArea in disabledChunkArea)
@@ -156,7 +206,7 @@ public class WorldManager : MonoBehaviour
       Vector3 disableChunkPos = centerChunkPos + disableArea * chunkDistance;
       if (chunkTable.ContainsKey(disableChunkPos))
       {
-        DisableChunk(disableChunkPos);
+        StartCoroutine(DisableChunk(disableChunkPos));
       }
     }
     foreach (Vector3 destroyArea in destroyedChunkArea)
@@ -164,12 +214,12 @@ public class WorldManager : MonoBehaviour
       Vector3 destroyChunkPos = centerChunkPos + destroyArea * chunkDistance;
       if (chunkTable.ContainsKey(destroyChunkPos))
       {
-        DestroyChunk(destroyChunkPos);
+        StartCoroutine(DestroyChunk(destroyChunkPos));
       }
     }
   }
 
-  private void RestoreChunk(Vector3 chunkPos)
+  private IEnumerator RestoreChunk(Vector3 chunkPos)
   {
     ChunkGenerator restoredChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     restoredChunk.UpdateName();
@@ -177,11 +227,11 @@ public class WorldManager : MonoBehaviour
     chunkTable.Add(chunkPos, restoredChunk);
     restoredChunk.SetChunkSetup();
     restoredChunk.SetBoxCollider();
-    restoredChunk.GenerateLoadedChunk(destroyedChunkData[chunkPos]);
+    yield return restoredChunk.GenerateLoadedChunk(destroyedChunkData[chunkPos]);
     destroyedChunkData.Remove(chunkPos);
   }
 
-  private void CreateChunk(Vector3 chunkPos)
+  private IEnumerator CreateChunk(Vector3 chunkPos)
   {
     ChunkGenerator newChunk = Instantiate(chunkGeneratorPrefab, chunkPos, Quaternion.identity, transform);
     newChunk.UpdateName();
@@ -190,16 +240,11 @@ public class WorldManager : MonoBehaviour
       chunkTable.Add(chunkPos, newChunk);
       newChunk.SetChunkSetup();
       newChunk.SetBoxCollider();
-      newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
+      yield return newChunk.GenerateChunk(GetPerlinOffset(newChunk.transform.position));
     }
   }
 
-  private void LoadChunkByVector(Vector3 chunkPos)
-  {
-
-  }
-
-  private void DestroyChunk(Vector3 chunkPos)
+  private IEnumerator DestroyChunk(Vector3 chunkPos)
   {
     WorldData.ChunkData destroyedChunk = new WorldData.ChunkData();
 
@@ -218,17 +263,20 @@ public class WorldManager : MonoBehaviour
     destroyedChunkData.Add(chunkPos, destroyedChunk);
 
     Destroy(chunkTable[chunkPos].gameObject);
+    yield return null;
     chunkTable.Remove(chunkPos);
   }
 
-  public void DisableChunk(Vector3 chunkPos)
+  public IEnumerator DisableChunk(Vector3 chunkPos)
   {
     chunkTable[chunkPos].gameObject.SetActive(false);
+    yield return null;
   }
 
-  private void EnableChunk(Vector3 chunkPos)
+  private IEnumerator EnableChunk(Vector3 chunkPos)
   {
     chunkTable[chunkPos].gameObject.SetActive(true);
+    yield return null;
   }
 
   public bool IsChunkGenerated(ChunkGenerator chunkGenerator)
