@@ -33,6 +33,7 @@ public class SavingWrapper : MonoBehaviour
     }
   }
 
+  // starts loading all data
   public void StartLoadingGame()
   {
     GameData gameData = savingSystem.LoadGame();
@@ -43,6 +44,7 @@ public class SavingWrapper : MonoBehaviour
     worldManager.LoadGame(gameData.worldData, playerNewPos);
   }
 
+  // checks if game is loadable
   public bool CanLoadGame()
   {
     if (savingSystem == null) { savingSystem = GetComponent<SavingSystem>(); }

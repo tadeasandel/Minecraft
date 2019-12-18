@@ -5,30 +5,32 @@ using UnityEngine;
 
 public class ItemTargetSwitcher : MonoBehaviour
 {
-  int currentItem = 0;
+  int currentItemIndex = 0;
 
   private void Start()
   {
     SetItemActive();
   }
 
+  // Checks for current item index vs the item last assigned
   private void Update()
   {
-    int previousItem = currentItem;
+    int previousItem = currentItemIndex;
     ProcessInput();
 
-    if (currentItem != previousItem)
+    if (currentItemIndex != previousItem)
     {
       SetItemActive();
     }
   }
 
+  // sets item by index active
   private void SetItemActive()
   {
     int itemIndex = 0;
     foreach (Transform item in transform)
     {
-      if (itemIndex == currentItem)
+      if (itemIndex == currentItemIndex)
       {
         item.GetComponent<ItemManager>().SetItemActive();
       }
@@ -44,54 +46,54 @@ public class ItemTargetSwitcher : MonoBehaviour
   {
     if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
     {
-      if (currentItem >= transform.childCount - 1)
+      if (currentItemIndex >= transform.childCount - 1)
       {
-        currentItem = 0;
+        currentItemIndex = 0;
       }
       else
       {
-        currentItem++;
+        currentItemIndex++;
       }
     }
     if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
     {
-      if (currentItem <= 0)
+      if (currentItemIndex <= 0)
       {
-        currentItem = transform.childCount - 1;
+        currentItemIndex = transform.childCount - 1;
       }
       else
       {
-        currentItem--;
+        currentItemIndex--;
       }
     }
     if (Input.GetKeyDown(KeyCode.Alpha1))
     {
-      currentItem = 0;
+      currentItemIndex = 0;
     }
     if (Input.GetKeyDown(KeyCode.Alpha2))
     {
-      currentItem = 1;
+      currentItemIndex = 1;
     }
     if (Input.GetKeyDown(KeyCode.Alpha3))
     {
-      currentItem = 2;
+      currentItemIndex = 2;
     }
     if (Input.GetKeyDown(KeyCode.Alpha4))
     {
-      currentItem = 3;
+      currentItemIndex = 3;
     }
     if (Input.GetKeyDown(KeyCode.Alpha5))
     {
-      currentItem = 4;
+      currentItemIndex = 4;
     }
     if (Input.GetKeyDown(KeyCode.Alpha6))
     {
-      currentItem = 5;
+      currentItemIndex = 5;
     }
   }
 
   public CubeType GetCubeType()
   {
-    return transform.GetChild(currentItem).GetComponent<ItemManager>().GetCubeType();
+    return transform.GetChild(currentItemIndex).GetComponent<ItemManager>().GetCubeType();
   }
 }

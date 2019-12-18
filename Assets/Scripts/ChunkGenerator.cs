@@ -7,13 +7,16 @@ public class ChunkGenerator : MonoBehaviour
 {
   float chunkHeight;
   float chunkWidth;
+  [Header("Generation Setup")]
   [SerializeField] float maxDepth;
-
   [SerializeField] float perlinScale = 0.1f;
-
   [SerializeField] float generationSeconds;
+  [Header("Generation cube parameters")]
+  public GenerationSetup[] generationSetups;
 
   [SerializeField] CubeEditor basicCubePrefab;
+  [Header("Neighbour Chunk offsets")]
+  [SerializeField] Vector3[] directions;
 
   WorldManager worldManager;
 
@@ -23,9 +26,6 @@ public class ChunkGenerator : MonoBehaviour
 
   public Dictionary<Vector3, CubeEditor> cubeEditorTable = new Dictionary<Vector3, CubeEditor>();
 
-  public GenerationSetup[] generationSetups;
-
-  [SerializeField] Vector3[] directions;
   public bool isLoaded = false;
 
   private void Awake()
@@ -33,6 +33,7 @@ public class ChunkGenerator : MonoBehaviour
     SetBoxCollider();
   }
 
+  // refreshes chunks every time player enters a new one
   private void OnTriggerEnter(Collider other)
   {
     if (other.CompareTag("Player"))
@@ -42,7 +43,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
-  // this gets cube by Vector
+  // Getter for CubeEditor by it's position
   public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorPos)
   {
     if (cubeEditorTable.ContainsKey(cubeEditorPos))
@@ -65,6 +66,7 @@ public class ChunkGenerator : MonoBehaviour
     return null;
   }
 
+  // returns true if chunk contains a neighbour CubeEditor 
   public bool DoesHaveNeighbour(Vector3 neighbourPos)
   {
     if (cubeEditorTable.ContainsKey(neighbourPos))
@@ -77,6 +79,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  // If cube does not have a neighbour in the same chunk, this method gets called to check if CubeEditor does have a neighbour in other chunk
   public CubeEditor GetEditorFromNeighbourChunk(Vector3 neighbourPos)
   {
     for (int i = 0; i < 4; i++)
@@ -92,6 +95,9 @@ public class ChunkGenerator : MonoBehaviour
     }
     return null;
   }
+
+  // Cube's relevant position is different to it's neighbours in other chunks
+  // This method converts what would normally be a position in same chunk to position in another chunk
 
   public Vector3 TransformCubeToNeighbourPos(Vector3 neighbourPos)
   {
@@ -114,12 +120,14 @@ public class ChunkGenerator : MonoBehaviour
     return neighbourPos;
   }
 
+  // sets box collider relevant to chunk size
   public void SetBoxCollider()
   {
     BoxCollider boxCollider = GetComponent<BoxCollider>();
     boxCollider.size = new Vector3(chunkHeight, chunkHeight, chunkHeight);
   }
 
+  // gets all information from a loaded WorldManager
   public void SetChunkSetup()
   {
     worldManager = GetComponentInParent<WorldManager>();
@@ -129,6 +137,7 @@ public class ChunkGenerator : MonoBehaviour
     generationOffset = new Vector3(-chunkDistance / 2, 0, -chunkDistance / 2);
   }
 
+  // creates Cube, requires cube's position and type
   public void CreateCube(CubeEditor cubeEditor, Vector3 cubePos, CubeType cubeType)
   {
     CubeEditor currentCubeEditor = Instantiate(basicCubePrefab, cubePos, Quaternion.identity, transform);
@@ -142,6 +151,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  // removes cube
   public void RemoveCube(CubeEditor cubeEditor)
   {
     Destroy(cubeEditor.gameObject);
@@ -151,6 +161,8 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  // Gets called only if the chunk is not loaded in saved data
+  // Generation is delayed
   public IEnumerator GenerateChunk(ChunkPerlinOffsets chunkPerlinOffsets)
   {
     perlinOffsetX = chunkPerlinOffsets.chunkOffsetX;
@@ -175,6 +187,7 @@ public class ChunkGenerator : MonoBehaviour
     isLoaded = true;
   }
 
+  // Gets called whenever there is stored data for the chunk
   public IEnumerator GenerateLoadedChunk(WorldData.ChunkData chunkData)
   {
     for (int i = 0; i < chunkData.cubePositionsX.Count; i++)
@@ -187,6 +200,7 @@ public class ChunkGenerator : MonoBehaviour
     isLoaded = true;
   }
 
+  // Returns CubeType based on setup in Generation Setups
   private CubeType ProcessCubeType(int cubeDepth)
   {
     foreach (GenerationSetup generationSetup in generationSetups)
@@ -199,6 +213,7 @@ public class ChunkGenerator : MonoBehaviour
     return generationSetups[3].generatedCubeType;
   }
 
+  // Returns CubeType equal to the CubeType string name value
   public CubeType ProcessCubeByName(string name)
   {
     foreach (GenerationSetup generationSetup in generationSetups)
@@ -211,6 +226,8 @@ public class ChunkGenerator : MonoBehaviour
     return generationSetups[3].generatedCubeType;
   }
 
+  // Generates height based on PerlinNoise
+  // Based on random generated offset at the start of the game
   private float GenerateHeight(int x, int z)
   {
     float xCoord = (float)x / chunkHeight + perlinOffsetX;
@@ -222,7 +239,9 @@ public class ChunkGenerator : MonoBehaviour
     return columnHeight;
   }
 
-  public void WelcomeNeighbour(Vector3 neighbourName, bool firstTime)
+  // Calls neighbour cube to refresh it's sides based on it's surrounding Cubes
+  // firstTime parameter stands for if the action is done for the first time. This prevents cubes doing infinite chain of passing refresh
+  public void RefreshNeighbour(Vector3 neighbourName, bool firstTime)
   {
     if (cubeEditorTable.ContainsKey(neighbourName))
     {
@@ -230,6 +249,7 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
+  // Updates name of the cube based on it's position
   public void UpdateName()
   {
     gameObject.name = transform.position.ToString();

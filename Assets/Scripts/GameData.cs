@@ -13,12 +13,21 @@ public class GameData
   {
     ProcessPlayerData(objectInteractionController);
 
+    ProcessWorldData(worldManager);
+
+  }
+
+  private void ProcessWorldData(WorldManager worldManager)
+  {
+    // stores the random generated number for Perlin Noise offset for both X and Z value
     worldData.chunkPerlinOffsetX = worldManager.chunkPerlinOffsets.chunkOffsetX;
     worldData.chunkPerlinOffsetZ = worldManager.chunkPerlinOffsets.chunkOffsetZ;
 
+    // stores which chunk was the central one for player
     worldData.centralChunkX = worldManager.currentCenterChunkPos.x;
     worldData.centralChunkZ = worldManager.currentCenterChunkPos.z;
 
+    // stores all information about all chunks and their cubes
     foreach (KeyValuePair<Vector3, ChunkGenerator> chunk in worldManager.chunkTable)
     {
       WorldData.ChunkData chunkData = new WorldData.ChunkData();
@@ -34,13 +43,14 @@ public class GameData
       worldData.chunkData.Add(chunkData);
     }
 
+    // stores information about all destroyed chunks
     foreach (KeyValuePair<Vector3, WorldData.ChunkData> chunk in worldManager.destroyedChunkData)
     {
       worldData.destroyedChunkData.Add(chunk.Value);
     }
-
   }
 
+  // stores player's position
   private void ProcessPlayerData(ObjectInteractionController objectInteractionController)
   {
     playerData.playerXPosition = objectInteractionController.transform.position.x;
@@ -48,6 +58,7 @@ public class GameData
     playerData.playerZPosition = objectInteractionController.transform.position.z;
   }
 }
+
 [System.Serializable]
 public class PlayerData
 {

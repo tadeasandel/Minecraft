@@ -8,6 +8,5 @@ public class CubeType : ScriptableObject
 {
   public float toughness;
   public string cubeTypeName;
-
   public Material[] materials;
 }

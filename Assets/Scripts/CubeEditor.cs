@@ -5,21 +5,26 @@ using UnityEngine;
 
 public class CubeEditor : MonoBehaviour
 {
+  // offset with tag names used to identify potencial new cube spawn location from player
   Dictionary<string, Vector3> sideOffset = new Dictionary<string, Vector3>();
+  //dictionary with access to all 6 sides with Vector3
   public Dictionary<Vector3, GameObject> childTable = new Dictionary<Vector3, GameObject>();
 
+  // Verticles of the cube, used to draw lines in building mode
   [SerializeField] Vector3[] verticles;
-
   [SerializeField] int gridSize;
 
-  public CubeType currentCubeType;
 
   ChunkGenerator cubeParent;
 
+  [Header("Cube Setup")]
+  public CubeType currentCubeType;
   float toughness;
 
+  // positions of possible cube neighbours
   Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down };
 
+  // Sets this cube's ChunkGenerator parent
   public void SetCubeParent(ChunkGenerator chunkGenerator)
   {
     cubeParent = chunkGenerator;
@@ -37,11 +42,15 @@ public class CubeEditor : MonoBehaviour
     ProcessNeighbours(true);
   }
 
+  // calls parent to destroy this cube
   private void DestroyCube()
   {
     cubeParent.RemoveCube(this);
   }
 
+  // Processes all neighbours surrounding the cube
+  // Disables all sides which get covered by another cube
+  // Calls the neighbour cubes to also cover their sides towards this cube
   public void ProcessNeighbours(bool firstTime)
   {
     for (int i = 0; i < 6; i++)
@@ -78,6 +87,8 @@ public class CubeEditor : MonoBehaviour
     }
   }
 
+  // gets called when this cube is being destroyed
+  // Refreshes other surrounding cubes
   private void AdjustNeighbours()
   {
     for (int i = 0; i < 6; i++)
@@ -102,6 +113,7 @@ public class CubeEditor : MonoBehaviour
     }
   }
 
+  // hides side GameObject by Vector3
   public void HideTransformByVector(Vector3 transformVector)
   {
     if (childTable.ContainsKey(transformVector))
@@ -120,6 +132,8 @@ public class CubeEditor : MonoBehaviour
     sideObject.SetActive(false);
   }
 
+  // Gets called upon creation
+  // Fills all required information a dictionary needs for offsets
   private void SetOffset()
   {
     sideOffset.Add("FrontBlock", new Vector3(0f, 0f, 1f));
@@ -130,17 +144,20 @@ public class CubeEditor : MonoBehaviour
     sideOffset.Add("DownBlock", new Vector3(0f, -1f, 0f));
   }
 
+  // getter for this Cube's CubeType
   public CubeType GetCubeType()
   {
     return currentCubeType;
   }
 
+  // sets this cube's CubeType
   public void SetCubeType(CubeType cubeType)
   {
     if (cubeType == null) { return; }
     currentCubeType = cubeType;
   }
 
+  // after setting this cube's CubeType this updates local values to it's responsive CubeType
   public void ApplyCubeType()
   {
     toughness = currentCubeType.toughness;
@@ -155,11 +172,13 @@ public class CubeEditor : MonoBehaviour
     }
   }
 
+  // snaps the cube to it's grid position. No longer used
   private void SnapToGridPosition()
   {
     transform.position = new Vector3(Mathf.RoundToInt(transform.position.x * gridSize), Mathf.RoundToInt(transform.position.y * gridSize), Mathf.RoundToInt(transform.position.z * gridSize));
   }
 
+  // updates name based on it's location + CubeType name
   public void UpdateName()
   {
     if (transform.name != transform.position.ToString())
@@ -184,6 +203,7 @@ public class CubeEditor : MonoBehaviour
     DrawLineWithIndexes(sideTag, 7, 4);
   }
 
+  // gets a center point of a pre-visualizing block before placed
   public Vector3 GetVizualizationCenter(string sideTag)
   {
     return transform.position + sideOffset[sideTag];
@@ -194,11 +214,13 @@ public class CubeEditor : MonoBehaviour
     Gizmos.DrawLine(transform.position + verticles[firstIndex] + sideOffset[sideTag], transform.position + verticles[secondIndex] + sideOffset[sideTag]);
   }
 
+  // calls parent to create block by player with position and CubeType
   public void CreateBlock(string sideTag, CubeType cubeType)
   {
     cubeParent.CreateCube(this, transform.position + sideOffset[sideTag], cubeType);
   }
 
+  // gets called when cube is destroyed by player
   public void DestroyBlock()
   {
     AdjustNeighbours();

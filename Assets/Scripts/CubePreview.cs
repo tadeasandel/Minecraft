@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class CubePreview : MonoBehaviour
 {
+  [Header("Transparency settings")]
   [Range(0, 1)] [SerializeField] float visualizedAlphaValue;
   const float transparentAlphaValue = 0;
 
-  [SerializeField] GameObject blockPrefabToVisualize;
-
   public CubeType currentCubeType;
 
+  // reference to player
   ObjectInteractionController objectInteractionController;
 
+  // List of all childs Meshes
   List<MeshRenderer> childMeshes = new List<MeshRenderer>();
 
   private void Start()
@@ -25,6 +26,7 @@ public class CubePreview : MonoBehaviour
     ApplyCubeType();
   }
 
+  // Acts as a refresh method for player switching cube targets or ToolType
   public void TargetChanged()
   {
     if (!objectInteractionController.IsUsingToolType() && objectInteractionController.target.targetCube != null)
@@ -37,6 +39,7 @@ public class CubePreview : MonoBehaviour
     }
   }
 
+  // Enables / Disables MeshRenderes, also sets transparency level
   private void ProcessChildren(bool isRevealed, float alphaValue)
   {
     foreach (MeshRenderer child in childMeshes)
@@ -46,6 +49,7 @@ public class CubePreview : MonoBehaviour
     }
   }
 
+  // Applies current Cube Type, also calls refresh
   public void ApplyCubeType()
   {
     if (objectInteractionController == null) { objectInteractionController = FindObjectOfType<ObjectInteractionController>(); }
@@ -58,15 +62,5 @@ public class CubePreview : MonoBehaviour
       childMeshes[i].material = currentCubeType.materials[i];
     }
     TargetChanged();
-  }
-
-  public CubeType GetCubeType()
-  {
-    return currentCubeType;
-  }
-
-  public void SetCubeType(CubeType cubeType)
-  {
-    currentCubeType = cubeType;
   }
 }

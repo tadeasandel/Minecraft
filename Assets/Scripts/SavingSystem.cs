@@ -8,6 +8,7 @@ public class SavingSystem : MonoBehaviour
 {
   string saveFileName = "gamedata.sav";
 
+  // saves current GameData into a save file
   public void SaveGame(WorldManager worldManager, ObjectInteractionController objectInteractionController)
   {
     string path = GetDataPath(saveFileName);
@@ -20,6 +21,7 @@ public class SavingSystem : MonoBehaviour
     }
   }
 
+  // Loads Game from saving file, if it exists
   public GameData LoadGame()
   {
     string path = GetDataPath(saveFileName);
@@ -36,6 +38,7 @@ public class SavingSystem : MonoBehaviour
     }
   }
 
+  // Deletes a save file if it exists
   public void DeleteFile()
   {
     string path = GetDataPath(saveFileName);
@@ -47,6 +50,7 @@ public class SavingSystem : MonoBehaviour
     File.Delete(path);
   }
 
+  // Checks if a file of filepath exists
   public bool CanLoadGame()
   {
     string path = GetDataPath(saveFileName);
@@ -60,6 +64,7 @@ public class SavingSystem : MonoBehaviour
     }
   }
 
+  // creates data path for saving
   public string GetDataPath(string saveFileName)
   {
     return Path.Combine(Application.persistentDataPath, saveFileName); ;
