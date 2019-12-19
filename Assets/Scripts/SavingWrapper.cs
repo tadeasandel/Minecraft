@@ -9,30 +9,6 @@ public class SavingWrapper : MonoBehaviour
   ObjectInteractionController objectInteractionController;
   SavingSystem savingSystem;
 
-  private void Start()
-  {
-    savingSystem = GetComponent<SavingSystem>();
-    WorldManager worldManager = FindObjectOfType<WorldManager>();
-  }
-
-  private void Update()
-  {
-    if (Input.GetKeyDown(KeyCode.P))
-    {
-      if (worldManager == null) { worldManager = FindObjectOfType<WorldManager>(); }
-      objectInteractionController = FindObjectOfType<ObjectInteractionController>();
-      savingSystem.SaveGame(worldManager, objectInteractionController);
-    }
-    if (Input.GetKeyDown(KeyCode.L))
-    {
-      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-    if (Input.GetKeyDown(KeyCode.Delete))
-    {
-      savingSystem.DeleteFile();
-    }
-  }
-
   // starts loading all data
   public void StartLoadingGame()
   {
@@ -55,6 +31,30 @@ public class SavingWrapper : MonoBehaviour
     else
     {
       return false;
+    }
+  }
+
+  private void Start()
+  {
+    savingSystem = GetComponent<SavingSystem>();
+    WorldManager worldManager = FindObjectOfType<WorldManager>();
+  }
+
+  private void Update()
+  {
+    if (Input.GetKeyDown(KeyCode.P))
+    {
+      if (worldManager == null) { worldManager = FindObjectOfType<WorldManager>(); }
+      objectInteractionController = FindObjectOfType<ObjectInteractionController>();
+      savingSystem.SaveGame(worldManager, objectInteractionController);
+    }
+    if (Input.GetKeyDown(KeyCode.L))
+    {
+      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    if (Input.GetKeyDown(KeyCode.Delete))
+    {
+      savingSystem.DeleteFile();
     }
   }
 }

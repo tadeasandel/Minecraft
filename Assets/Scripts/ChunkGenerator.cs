@@ -28,21 +28,6 @@ public class ChunkGenerator : MonoBehaviour
 
   public bool isLoaded = false;
 
-  private void Awake()
-  {
-    SetBoxCollider();
-  }
-
-  // refreshes chunks every time player enters a new one
-  private void OnTriggerEnter(Collider other)
-  {
-    if (other.CompareTag("Player"))
-    {
-      if (worldManager == null) { return; }
-      worldManager.RefreshChunks(transform.position);
-    }
-  }
-
   // Getter for CubeEditor by it's position
   public CubeEditor GetCubeEditorByVector(Vector3 cubeEditorPos)
   {
@@ -94,30 +79,6 @@ public class ChunkGenerator : MonoBehaviour
       return neighbourCube;
     }
     return null;
-  }
-
-  // Cube's relevant position is different to it's neighbours in other chunks
-  // This method converts what would normally be a position in same chunk to position in another chunk
-
-  public Vector3 TransformCubeToNeighbourPos(Vector3 neighbourPos)
-  {
-    if (neighbourPos == new Vector3(0, 0, chunkHeight))
-    {
-      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z - chunkHeight + 1);
-    }
-    else if (neighbourPos == new Vector3(0, 0, -chunkHeight))
-    {
-      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z + chunkHeight - 1);
-    }
-    else if (neighbourPos == new Vector3(chunkHeight, 0, 0))
-    {
-      neighbourPos = new Vector3(neighbourPos.x - chunkHeight + 1, neighbourPos.y, neighbourPos.z);
-    }
-    else if (neighbourPos == new Vector3(-chunkHeight, 0, 0))
-    {
-      neighbourPos = new Vector3(neighbourPos.x + chunkHeight - 1, neighbourPos.y, neighbourPos.z);
-    }
-    return neighbourPos;
   }
 
   // sets box collider relevant to chunk size
@@ -200,17 +161,43 @@ public class ChunkGenerator : MonoBehaviour
     isLoaded = true;
   }
 
-  // Returns CubeType based on setup in Generation Setups
-  private CubeType ProcessCubeType(int cubeDepth)
+  // Updates name of the cube based on it's position
+  public void UpdateName()
   {
-    foreach (GenerationSetup generationSetup in generationSetups)
+    gameObject.name = transform.position.ToString();
+  }
+
+  // Cube's relevant position is different to it's neighbours in other chunks
+  // This method converts what would normally be a position in same chunk to position in another chunk
+  private Vector3 TransformCubeToNeighbourPos(Vector3 neighbourPos)
+  {
+    if (neighbourPos == new Vector3(0, 0, chunkHeight))
     {
-      if (cubeDepth >= generationSetup.minGenerationDepth && cubeDepth <= generationSetup.maxGenerationDepth)
-      {
-        return generationSetup.generatedCubeType;
-      }
+      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z - chunkHeight + 1);
     }
-    return generationSetups[3].generatedCubeType;
+    else if (neighbourPos == new Vector3(0, 0, -chunkHeight))
+    {
+      neighbourPos = new Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z + chunkHeight - 1);
+    }
+    else if (neighbourPos == new Vector3(chunkHeight, 0, 0))
+    {
+      neighbourPos = new Vector3(neighbourPos.x - chunkHeight + 1, neighbourPos.y, neighbourPos.z);
+    }
+    else if (neighbourPos == new Vector3(-chunkHeight, 0, 0))
+    {
+      neighbourPos = new Vector3(neighbourPos.x + chunkHeight - 1, neighbourPos.y, neighbourPos.z);
+    }
+    return neighbourPos;
+  }
+
+  // refreshes chunks every time player enters a new one
+  private void OnTriggerEnter(Collider other)
+  {
+    if (other.CompareTag("Player"))
+    {
+      if (worldManager == null) { return; }
+      worldManager.RefreshChunks(transform.position);
+    }
   }
 
   // Returns CubeType equal to the CubeType string name value
@@ -219,6 +206,19 @@ public class ChunkGenerator : MonoBehaviour
     foreach (GenerationSetup generationSetup in generationSetups)
     {
       if (generationSetup.cubeTypeName == name)
+      {
+        return generationSetup.generatedCubeType;
+      }
+    }
+    return generationSetups[3].generatedCubeType;
+  }
+
+  // Returns CubeType based on setup in Generation Setups
+  private CubeType ProcessCubeType(int cubeDepth)
+  {
+    foreach (GenerationSetup generationSetup in generationSetups)
+    {
+      if (cubeDepth >= generationSetup.minGenerationDepth && cubeDepth <= generationSetup.maxGenerationDepth)
       {
         return generationSetup.generatedCubeType;
       }
@@ -241,7 +241,7 @@ public class ChunkGenerator : MonoBehaviour
 
   // Calls neighbour cube to refresh it's sides based on it's surrounding Cubes
   // firstTime parameter stands for if the action is done for the first time. This prevents cubes doing infinite chain of passing refresh
-  public void RefreshNeighbour(Vector3 neighbourName, bool firstTime)
+  private void RefreshNeighbour(Vector3 neighbourName, bool firstTime)
   {
     if (cubeEditorTable.ContainsKey(neighbourName))
     {
@@ -249,13 +249,11 @@ public class ChunkGenerator : MonoBehaviour
     }
   }
 
-  // Updates name of the cube based on it's position
-  public void UpdateName()
+  private void Awake()
   {
-    gameObject.name = transform.position.ToString();
+    SetBoxCollider();
   }
 }
-
 [System.Serializable]
 public class GenerationSetup
 {

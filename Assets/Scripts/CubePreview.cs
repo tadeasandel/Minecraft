@@ -16,6 +16,21 @@ public class CubePreview : MonoBehaviour
   // List of all childs Meshes
   List<MeshRenderer> childMeshes = new List<MeshRenderer>();
 
+  // Applies current Cube Type, also calls refresh
+  public void ApplyCubeType()
+  {
+    if (objectInteractionController == null) { objectInteractionController = FindObjectOfType<ObjectInteractionController>(); }
+    currentCubeType = objectInteractionController.GetCubeType();
+
+    if (currentCubeType == null) { TargetChanged(); return; }
+    if (currentCubeType.materials.Length != 6) { return; }
+    for (int i = 0; i < 6; i++)
+    {
+      childMeshes[i].material = currentCubeType.materials[i];
+    }
+    TargetChanged();
+  }
+
   private void Start()
   {
     objectInteractionController = FindObjectOfType<ObjectInteractionController>();
@@ -27,7 +42,7 @@ public class CubePreview : MonoBehaviour
   }
 
   // Acts as a refresh method for player switching cube targets or ToolType
-  public void TargetChanged()
+  private void TargetChanged()
   {
     if (!objectInteractionController.IsUsingToolType() && objectInteractionController.target.targetCube != null)
     {
@@ -47,20 +62,5 @@ public class CubePreview : MonoBehaviour
       child.gameObject.SetActive(isRevealed);
       child.material.color = new Color(child.material.color.r, child.material.color.g, child.material.color.b, alphaValue);
     }
-  }
-
-  // Applies current Cube Type, also calls refresh
-  public void ApplyCubeType()
-  {
-    if (objectInteractionController == null) { objectInteractionController = FindObjectOfType<ObjectInteractionController>(); }
-    currentCubeType = objectInteractionController.GetCubeType();
-
-    if (currentCubeType == null) { TargetChanged(); return; }
-    if (currentCubeType.materials.Length != 6) { return; }
-    for (int i = 0; i < 6; i++)
-    {
-      childMeshes[i].material = currentCubeType.materials[i];
-    }
-    TargetChanged();
   }
 }

@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
   float timeSinceJump;
 
-  void Update()
+  private void Update()
   {
     // checks if player's bottom prefab touches ground marked with ground LayerMask
     isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);

@@ -7,6 +7,11 @@ public class ItemTargetSwitcher : MonoBehaviour
 {
   int currentItemIndex = 0;
 
+  public CubeType GetCubeType()
+  {
+    return transform.GetChild(currentItemIndex).GetComponent<ItemManager>().GetCubeType();
+  }
+
   private void Start()
   {
     SetItemActive();
@@ -90,10 +95,5 @@ public class ItemTargetSwitcher : MonoBehaviour
     {
       currentItemIndex = 5;
     }
-  }
-
-  public CubeType GetCubeType()
-  {
-    return transform.GetChild(currentItemIndex).GetComponent<ItemManager>().GetCubeType();
   }
 }

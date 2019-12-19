@@ -44,40 +44,34 @@ public class ObjectInteractionController : MonoBehaviour
     public string sideTag;
   }
 
-  private void Start()
-  {
-    itemTargetSwitcher = FindObjectOfType<ItemTargetSwitcher>();
-    cubePreview = FindObjectOfType<CubePreview>();
-  }
-
   public CubeType GetCubeType()
   {
     return currentCubeType;
   }
 
-  void Update()
+  // Gets if player has an active ToolType time excluding default one
+  public bool IsUsingToolType()
   {
-    ProcessRaycast();
-    UpdateTimers();
+    if ((currentToolType == defaultToolType && currentCubeType == null) || (currentToolType != defaultToolType && currentCubeType == null))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
-  // Gets called when player can place a cube
-  // moves the CubePreview prefab to raycast position
-  private void MoveCubePreview(Vector3 cubePreviewPos)
+  // sets Player position
+  public void SetPosition(Vector3 playerNewPos)
   {
-    cubePreview.transform.position = cubePreviewPos;
+    GetComponent<PlayerMovement>().SetPositionTo(playerNewPos);
   }
 
   // Loads player position from file
   public void LoadState(Vector3 playerPos)
   {
     SetPosition(playerPos);
-  }
-
-  private void UpdateTimers()
-  {
-    timeSincePlacedBlock += Time.deltaTime;
-    timeSinceDestroyedBlock += Time.deltaTime;
   }
 
   // Gets called when item selection is changed
@@ -113,23 +107,29 @@ public class ObjectInteractionController : MonoBehaviour
     }
   }
 
-  // Gets if player has an active ToolType time excluding default one
-  public bool IsUsingToolType()
+  // Gets called when player can place a cube
+  // moves the CubePreview prefab to raycast position
+  private void MoveCubePreview(Vector3 cubePreviewPos)
   {
-    if ((currentToolType == defaultToolType && currentCubeType == null) || (currentToolType != defaultToolType && currentCubeType == null))
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    cubePreview.transform.position = cubePreviewPos;
   }
 
-  // sets Player position
-  public void SetPosition(Vector3 playerNewPos)
+  private void Start()
   {
-    GetComponent<PlayerMovement>().SetPositionTo(playerNewPos);
+    itemTargetSwitcher = FindObjectOfType<ItemTargetSwitcher>();
+    cubePreview = FindObjectOfType<CubePreview>();
+  }
+
+  private void Update()
+  {
+    ProcessRaycast();
+    UpdateTimers();
+  }
+
+  private void UpdateTimers()
+  {
+    timeSincePlacedBlock += Time.deltaTime;
+    timeSinceDestroyedBlock += Time.deltaTime;
   }
 
   // does process raycasting on cubes
@@ -198,7 +198,7 @@ public class ObjectInteractionController : MonoBehaviour
   }
 
   // Process of active right mouse button for Building a block as well as visualizing it before it's placed
-  public void ProcessBuilding(RaycastHit hit)
+  private void ProcessBuilding(RaycastHit hit)
   {
     VisualizeGrid(hit);
     if (Input.GetButtonDown("Fire2"))

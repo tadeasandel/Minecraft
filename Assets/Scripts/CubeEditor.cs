@@ -30,6 +30,47 @@ public class CubeEditor : MonoBehaviour
     cubeParent = chunkGenerator;
   }
 
+  // calls parent to create block by player with position and CubeType
+  public void CreateBlock(string sideTag, CubeType cubeType)
+  {
+    cubeParent.CreateCube(this, transform.position + sideOffset[sideTag], cubeType);
+  }
+
+  // gets called when cube is destroyed by player
+  public void DestroyBlock()
+  {
+    AdjustNeighbours();
+    DestroyCube();
+  }
+
+  // getter for this Cube's CubeType
+  public CubeType GetCubeType()
+  {
+    return currentCubeType;
+  }
+
+  // sets this cube's CubeType
+  public void SetCubeType(CubeType cubeType)
+  {
+    if (cubeType == null) { return; }
+    currentCubeType = cubeType;
+  }
+
+  // after setting this cube's CubeType this updates local values to it's responsive CubeType
+  public void ApplyCubeType()
+  {
+    toughness = currentCubeType.toughness;
+    for (int i = 0; i < 6; i++)
+    {
+      if (currentCubeType.materials.Length != 6) { break; }
+      transform.GetChild(i).GetComponent<MeshRenderer>().material = currentCubeType.materials[i];
+      if (!childTable.ContainsKey(directions[i]))
+      {
+        childTable.Add(directions[i], transform.GetChild(i).gameObject);
+      }
+    }
+  }
+
   private void Start()
   {
     if (cubeParent == null)
@@ -40,12 +81,6 @@ public class CubeEditor : MonoBehaviour
     SetOffset();
     ApplyCubeType();
     ProcessNeighbours(true);
-  }
-
-  // calls parent to destroy this cube
-  private void DestroyCube()
-  {
-    cubeParent.RemoveCube(this);
   }
 
   // Processes all neighbours surrounding the cube
@@ -87,97 +122,6 @@ public class CubeEditor : MonoBehaviour
     }
   }
 
-  // gets called when this cube is being destroyed
-  // Refreshes other surrounding cubes
-  private void AdjustNeighbours()
-  {
-    for (int i = 0; i < 6; i++)
-    {
-      Vector3 neighbourCube = transform.position + directions[i];
-      if (cubeParent == null) { print("getting parent"); cubeParent = GetComponentInParent<ChunkGenerator>(); }
-      CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
-      if (temporaryCubeEditor == null) { continue; }
-      if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
-      {
-        temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
-      }
-      else
-      {
-        temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
-        if (temporaryCubeEditor == null) { continue; }
-        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
-        {
-          temporaryCubeEditor.HideTransformByVector(-directions[i]);
-        }
-      }
-    }
-  }
-
-  // hides side GameObject by Vector3
-  public void HideTransformByVector(Vector3 transformVector)
-  {
-    if (childTable.ContainsKey(transformVector))
-    {
-      childTable[transformVector].SetActive(false);
-    }
-  }
-
-  private void RevealTransform(GameObject sideObject)
-  {
-    sideObject.SetActive(true);
-  }
-
-  public void HideSideTransform(GameObject sideObject)
-  {
-    sideObject.SetActive(false);
-  }
-
-  // Gets called upon creation
-  // Fills all required information a dictionary needs for offsets
-  private void SetOffset()
-  {
-    sideOffset.Add("FrontBlock", new Vector3(0f, 0f, 1f));
-    sideOffset.Add("BackBlock", new Vector3(0f, 0f, -1f));
-    sideOffset.Add("LeftBlock", new Vector3(-1f, 0f, 0f));
-    sideOffset.Add("RightBlock", new Vector3(1f, 0f, 0f));
-    sideOffset.Add("TopBlock", new Vector3(0f, 1f, 0f));
-    sideOffset.Add("DownBlock", new Vector3(0f, -1f, 0f));
-  }
-
-  // getter for this Cube's CubeType
-  public CubeType GetCubeType()
-  {
-    return currentCubeType;
-  }
-
-  // sets this cube's CubeType
-  public void SetCubeType(CubeType cubeType)
-  {
-    if (cubeType == null) { return; }
-    currentCubeType = cubeType;
-  }
-
-  // after setting this cube's CubeType this updates local values to it's responsive CubeType
-  public void ApplyCubeType()
-  {
-    toughness = currentCubeType.toughness;
-    for (int i = 0; i < 6; i++)
-    {
-      if (currentCubeType.materials.Length != 6) { break; }
-      transform.GetChild(i).GetComponent<MeshRenderer>().material = currentCubeType.materials[i];
-      if (!childTable.ContainsKey(directions[i]))
-      {
-        childTable.Add(directions[i], transform.GetChild(i).gameObject);
-      }
-    }
-  }
-
-  // snaps the cube to it's grid position. No longer used
-  private void SnapToGridPosition()
-  {
-    transform.position = new Vector3(Mathf.RoundToInt(transform.position.x * gridSize), Mathf.RoundToInt(transform.position.y * gridSize), Mathf.RoundToInt(transform.position.z * gridSize));
-  }
-
   // updates name based on it's location + CubeType name
   public void UpdateName()
   {
@@ -209,21 +153,78 @@ public class CubeEditor : MonoBehaviour
     return transform.position + sideOffset[sideTag];
   }
 
+  // gets called when this cube is being destroyed
+  // Refreshes other surrounding cubes
+  private void AdjustNeighbours()
+  {
+    for (int i = 0; i < 6; i++)
+    {
+      Vector3 neighbourCube = transform.position + directions[i];
+      if (cubeParent == null) { print("getting parent"); cubeParent = GetComponentInParent<ChunkGenerator>(); }
+      CubeEditor temporaryCubeEditor = cubeParent.GetCubeEditorByVector(neighbourCube);
+      if (temporaryCubeEditor == null) { continue; }
+      if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
+      {
+        temporaryCubeEditor.childTable[-directions[i]].gameObject.SetActive(true);
+      }
+      else
+      {
+        temporaryCubeEditor = cubeParent.GetEditorFromNeighbourChunk(neighbourCube);
+        if (temporaryCubeEditor == null) { continue; }
+        if (temporaryCubeEditor.childTable.ContainsKey(-directions[i]))
+        {
+          temporaryCubeEditor.HideTransformByVector(-directions[i]);
+        }
+      }
+    }
+  }
+
+  // hides side GameObject by Vector3
+  private void HideTransformByVector(Vector3 transformVector)
+  {
+    if (childTable.ContainsKey(transformVector))
+    {
+      childTable[transformVector].SetActive(false);
+    }
+  }
+
+  private void RevealTransform(GameObject sideObject)
+  {
+    sideObject.SetActive(true);
+  }
+
+  private void HideSideTransform(GameObject sideObject)
+  {
+    sideObject.SetActive(false);
+  }
+
+  // Gets called upon creation
+  // Fills all required information a dictionary needs for offsets
+  private void SetOffset()
+  {
+    sideOffset.Add("FrontBlock", new Vector3(0f, 0f, 1f));
+    sideOffset.Add("BackBlock", new Vector3(0f, 0f, -1f));
+    sideOffset.Add("LeftBlock", new Vector3(-1f, 0f, 0f));
+    sideOffset.Add("RightBlock", new Vector3(1f, 0f, 0f));
+    sideOffset.Add("TopBlock", new Vector3(0f, 1f, 0f));
+    sideOffset.Add("DownBlock", new Vector3(0f, -1f, 0f));
+  }
+
+  // snaps the cube to it's grid position. No longer used
+  private void SnapToGridPosition()
+  {
+    transform.position = new Vector3(Mathf.RoundToInt(transform.position.x * gridSize), Mathf.RoundToInt(transform.position.y * gridSize), Mathf.RoundToInt(transform.position.z * gridSize));
+  }
+
   private void DrawLineWithIndexes(string sideTag, int firstIndex, int secondIndex)
   {
     Gizmos.DrawLine(transform.position + verticles[firstIndex] + sideOffset[sideTag], transform.position + verticles[secondIndex] + sideOffset[sideTag]);
   }
 
-  // calls parent to create block by player with position and CubeType
-  public void CreateBlock(string sideTag, CubeType cubeType)
-  {
-    cubeParent.CreateCube(this, transform.position + sideOffset[sideTag], cubeType);
-  }
 
-  // gets called when cube is destroyed by player
-  public void DestroyBlock()
+  // calls parent to destroy this cube
+  private void DestroyCube()
   {
-    AdjustNeighbours();
-    DestroyCube();
+    cubeParent.RemoveCube(this);
   }
 }
