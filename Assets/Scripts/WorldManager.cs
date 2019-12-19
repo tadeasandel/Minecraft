@@ -303,7 +303,10 @@ public class WorldManager : MonoBehaviour
       destroyedChunk.cubeTypeNames.Add(cubeTypeName);
     }
 
-    destroyedChunkData.Add(chunkPos, destroyedChunk);
+    if (!destroyedChunkData.ContainsKey(chunkPos))
+    {
+      destroyedChunkData.Add(chunkPos, destroyedChunk);
+    }
 
     Destroy(chunkTable[chunkPos].gameObject);
     yield return null;
