@@ -47,7 +47,6 @@ MonoBehaviour:
   maxDepth: 20
   perlinScale: 1000
   generationSeconds: 0.00000001
-  basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
   generationSetups:
   - generatedCubeType: {fileID: 11400000, guid: 8b9953b94ad47d44696de657e0b9da16,
       type: 2}
@@ -69,6 +68,7 @@ MonoBehaviour:
     maxGenerationDepth: 3
     minGenerationDepth: 0
     cubeTypeName: Bedrock
+  basicCubePrefab: {fileID: 491337630, guid: fab13b2e3c0e2694da039c0dfe76fc64, type: 3}
   directions:
   - {x: 20, y: 0, z: 0}
   - {x: -20, y: 0, z: 0}
