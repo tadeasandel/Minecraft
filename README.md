@@ -1,2 +1,2 @@
-# Grip Digital Minecraft
+# Minecraft
  
